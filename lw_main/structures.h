@@ -4,6 +4,8 @@ struct DateTime
 	int year;
 	int month;
 	int day;
+	int hours;
+	int minutes;
 };
 
 struct Login

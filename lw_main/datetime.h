@@ -7,6 +7,8 @@
 #define OUT_OF_DAY_EXCEPTION -1
 #define OUT_OF_MONTH_EXCEPTION -1
 #define OUT_OF_YEAR_EXCEPTION -1
+#define OUT_OF_HOUR_EXCEPTION -1
+#define OUT_OF_MINUTE_EXCEPTION -1
 
 enum Months
 {
@@ -23,8 +25,6 @@ enum Months
 	November,
 	December
 };
-
-
 
 int InitDay(struct DateTime date, int day)
 {
@@ -89,9 +89,23 @@ int InitYear(int year)
 	return year;
 }
 
+int InitHours(int hour)
+{
+	if (hour > 23 || hour < 0)	
+		return OUT_OF_HOUR_EXCEPTION;
+	return hour;
+}
+
+int InitMinutes(int minute)
+{
+	if (minute > 59 || minute < 0)
+		return OUT_OF_MINUTE_EXCEPTION;
+	return minute;
+}
+
 char* DateTimeToString(struct DateTime dateTime)
 {
-	char* strDate = (char*)malloc(sizeof(char) * 11);
+	char* strDate = (char*)malloc(sizeof(char) * 17);
 
 	char* sDay = NumberToString(dateTime.day);
 	if (dateTime.day < 10)
@@ -109,17 +123,33 @@ char* DateTimeToString(struct DateTime dateTime)
 
 	char* sYear = NumberToString(dateTime.year);
 
-	strDate = strpbrk(strDate, sDay);
-	strDate = strpbrk(strDate, ".");
-	strDate = strpbrk(strDate, sMonth);
-	strDate = strpbrk(strDate, ".");
-	strDate = strpbrk(strDate, sYear);
-	strDate[10] = '/0';
+	char* sHour = NumberToString(dateTime.hours);
+	if (dateTime.hours < 10)
+	{
+		sHour[1] = sHour[0];
+		sHour[0] = '0';
+	}
+
+	char* sMinute = NumberToString(dateTime.minutes);
+	if (dateTime.minutes < 10)
+	{
+		sMinute[1] = sMinute[0];
+		sMinute[0] = '0';
+	}
+
+	strDate = concat(strDate, sDay);
+	strDate = concat(strDate, ".");
+	strDate = concat(strDate, sMonth);
+	strDate = concat(strDate, ".");
+	strDate = concat(strDate, sYear);
+
+	strDate = concat(strDate, " ");
+
+	strDate = concat(strDate, sHour);
+	strDate = concat(strDate, ":");
+	strDate = concat(strDate, sMinute);
+
+	strDate[16] = '/0';
 
 	return strDate;
-}
-
-struct DateTime StringToDateTime(char* strDate)
-{
-
 }
