@@ -29,5 +29,14 @@
     <ClInclude Include="structures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="artistPerfomance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="artists.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="user.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

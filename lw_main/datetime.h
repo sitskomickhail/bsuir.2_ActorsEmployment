@@ -1,4 +1,5 @@
 #pragma once
+#define _CRT_SECURE_NO_WARNINGS
 #include "string.h"
 #include "stringHelper.h"
 #include "structures.h"
@@ -92,21 +93,21 @@ char* DateTimeToString(struct DateTime dateTime)
 {
 	char* strDate = (char*)malloc(sizeof(char) * 11);
 
-	char sDay[2] = FromIntToString(dateTime.day);
+	char* sDay = NumberToString(dateTime.day);
 	if (dateTime.day < 10)
 	{
 		sDay[1] = sDay[0];
 		sDay[0] = '0';
 	}
 
-	char sMonth[2] = FromIntToString(dateTime.month);
+	char* sMonth = NumberToString(dateTime.month);
 	if (dateTime.month < 10)
 	{
 		sDay[1] = sDay[0];
 		sDay[0] = '0';
 	}
 
-	char sYear[4] = FromIntToString(dateTime.year);	
+	char* sYear = NumberToString(dateTime.year);
 
 	strDate = strpbrk(strDate, sDay);
 	strDate = strpbrk(strDate, ".");

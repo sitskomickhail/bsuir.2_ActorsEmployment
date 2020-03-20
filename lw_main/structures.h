@@ -13,13 +13,18 @@ struct Login
 	unsigned long hashSalt;
 };
 
+struct User
+{
+	char* name;
+	int permission;
+	struct Login login;
+};
+
 struct Artist
 {
 	int id;
 	char* name;
 	struct DateTime birthDate;
-	int perfomanceCount;
-	struct Login login;
 };
 
 struct Perfomance
