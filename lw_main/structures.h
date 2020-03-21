@@ -41,9 +41,7 @@ struct Perfomance
 struct ArtistPerfomances
 {
 	int artistId;
-	struct Artist artist;
 	int perfomanceId;
-	struct Perfomance perfomance;
 	char* role;
 	long salary;
 };

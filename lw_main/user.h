@@ -80,8 +80,9 @@ User ChangeLoginPassword(char* login, char* password, User user)
 	return user;
 }
 
-User LoginIn(FILE* file, char* login, char* password)
+User LoginIn(char* fileName, char* login, char* password)
 {
+	FILE* file = fopen(fileName, "r");
 	User userFromFile;
 
 	while (fread(&userFromFile, sizeof(User), 1, file))
@@ -90,6 +91,7 @@ User LoginIn(FILE* file, char* login, char* password)
 		{
 			if (CheckPassword(userFromFile.login.password, userFromFile.login.hashSalt, password))
 			{
+				fclose(file);
 				return userFromFile;
 			}
 			else
@@ -99,16 +101,19 @@ User LoginIn(FILE* file, char* login, char* password)
 		}
 	}
 
+	fclose(file);
 	userFromFile.permission = LOGIN_OR_PASSWORD_NOT_CORRECT;
 	return userFromFile;
 }
 
-void AddUserInFile(FILE* file, User user)
+void AddUserInFile(char* fileName, User user)
 {
+	FILE* file = fopen(fileName, "a+");
 	fwrite(&user, sizeof(User), 1, file);
+	fclose(file);
 }
 
-void AddUserInFileWithCount(FILE* file, User* users, int usersCount)
+void SetUsersInFile(FILE* file, User* users, int usersCount)
 {
 	fwrite(users, sizeof(User), usersCount, file);
 }
