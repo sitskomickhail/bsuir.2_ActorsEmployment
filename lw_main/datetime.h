@@ -137,17 +137,17 @@ char* DateTimeToString(struct DateTime dateTime)
 		sMinute[0] = '0';
 	}
 
-	strDate = concat(strDate, sDay);
-	strDate = concat(strDate, ".");
-	strDate = concat(strDate, sMonth);
-	strDate = concat(strDate, ".");
-	strDate = concat(strDate, sYear);
+	strDate = Concat(strDate, sDay);
+	strDate = Concat(strDate, ".");
+	strDate = Concat(strDate, sMonth);
+	strDate = Concat(strDate, ".");
+	strDate = Concat(strDate, sYear);
 
-	strDate = concat(strDate, " ");
+	strDate = Concat(strDate, " ");
 
-	strDate = concat(strDate, sHour);
-	strDate = concat(strDate, ":");
-	strDate = concat(strDate, sMinute);
+	strDate = Concat(strDate, sHour);
+	strDate = Concat(strDate, ":");
+	strDate = Concat(strDate, sMinute);
 
 	strDate[16] = '/0';
 

@@ -4,6 +4,24 @@
 #include "math.h"
 #include "stdbool.h"
 
+char* Concat(char* s1, char* s2)
+{
+	size_t len1 = strlen(s1);
+	size_t len2 = strlen(s2);
+
+	char* result = malloc(len1 + len2 + 1);
+
+	if (!result) {
+		fprintf(stderr, "malloc() failed: insufficient memory!\n");
+		return NULL;
+	}
+
+	memcpy(result, s1, len1);
+	memcpy(result + len1, s2, len2 + 1);
+
+	return result;
+}
+
 char* NumberToString(unsigned long num)
 {
 	unsigned long temp = num;
@@ -42,7 +60,7 @@ char* NumberToString(unsigned long num)
 
 char** SliceStrings(char** strReturn, int retPos, int pos, char* str, char separator)
 {
-	if (pos == strlen(str))
+	if (pos >= strlen(str))
 	{
 		return strReturn;
 	}
@@ -50,24 +68,26 @@ char** SliceStrings(char** strReturn, int retPos, int pos, char* str, char separ
 	char* tempStr = (char*)malloc(sizeof(char) * 100);
 
 	int strElements = 0;
-	while (str[pos] != separator || str[pos] != '/0')
+	while (str[pos] != separator && str[pos] != '\0')
 	{
 		tempStr[strElements++] = str[pos++];
 	}
-	tempStr[strElements] = '/0';
+	tempStr[strElements] = '\0';
 
-	strReturn[retPos] = (char*)malloc(sizeof(char) * strElements);
-	strReturn[retPos] = strpbrk(strReturn[retPos], tempStr);
+	strReturn[retPos] = (char*)malloc(sizeof(char) * 1);
+	strReturn[retPos][0] = '\0';
 
-	return SliceStrings(strReturn, ++retPos, pos, str, separator);
+	strReturn[retPos] = Concat(strReturn[retPos], tempStr);
+
+	return SliceStrings(strReturn, ++retPos, ++pos, str, separator);
 }
 
-char** Split(char* str, char separator)
+char** Split(char* str, char separator, int* size)
 {
-	int countElements = 1;
-	for (size_t i = 0; i < strlen(str); i++) if (str[i] == separator) countElements++;
+	//int countElements = 0
+	for (size_t i = 0; i < strlen(str); i++) if (str[i] == separator) size++;
 
-	char** strReturn = (char**)malloc(countElements);
+	char** strReturn = (char**)malloc(size);
 	
 	strReturn = SliceStrings(strReturn, 0, 0, str, separator);
 
@@ -104,20 +124,28 @@ long FromStringToNumber(char* str)
 	return number;
 }
 
-char* concat(char* s1, char* s2) 
+int* ConvertStringToAsciiArray(char* string)
 {
-	size_t len1 = strlen(s1);
-	size_t len2 = strlen(s2);
+	int* asciiArray = (int*)malloc(sizeof(int) * strlen(string));
 
-	char* result = malloc(len1 + len2 + 1);
-
-	if (!result) {
-		fprintf(stderr, "malloc() failed: insufficient memory!\n");
-		return NULL;
+	for (size_t i = 0; i < strlen(string); i++)
+	{
+		asciiArray[i] = (int)string[i];
 	}
 
-	memcpy(result, s1, len1);
-	memcpy(result + len1, s2, len2 + 1);
+	return asciiArray;
+}
 
-	return result;
+char* ConvertFromAsciiArrayToString(int* asciiArray)
+{
+	int arrLength = sizeof(asciiArray) / sizeof(int);
+	char* string = (char*)malloc(arrLength + 1);
+
+	for (size_t i = 0; i < arrLength; i++)
+	{
+		string[i] = (char)asciiArray[i];
+	}
+	string[arrLength] = '\0';
+
+	return string;
 }

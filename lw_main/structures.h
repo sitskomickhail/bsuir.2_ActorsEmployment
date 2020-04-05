@@ -17,7 +17,6 @@ struct Login
 
 struct User
 {
-	char* name;
 	int permission;
 	struct Login login;
 };
