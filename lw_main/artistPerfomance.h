@@ -4,45 +4,33 @@
 #include "stringHelper.h"
 #include "structures.h"
 
-typedef struct ArtistPerfomances ArtPerf;
-
-
-ArtPerf* GetArtistPerfomancesFromFile(char* fileName, int& count)
+struct ArtistPerfomances InitArtPerf(struct ArtistPerfomances* artist, int artistId, int perfId, char* role, long salary)
 {
-	count = 0;
-	FILE* file = fopen(fileName, "r");
-	if (file == NULL)
+
+}
+
+struct ArtistPerfomances* GetArtPerfFromFile(char* fileName)
+{
+	FILE* file;
+	file = fopen(fileName, "r");
+
+	int count = 0;
+	struct ArtistPerfomances* artistPerf = (struct ArtistPerfomances*)malloc(0);
+
+	struct ArtistPerfomances tempArtPerf;
+	while (fread(&tempArtPerf, sizeof(struct ArtistPerfomances), 1, file))
 	{
-		FILE* file = fopen(fileName, "w");
-		fclose(file);
-
-		return NULL;
+		artistPerf = (struct ArtistPerfomances*)realloc(artistPerf, sizeof(struct ArtistPerfomances) * ++count);
+		artistPerf[count - 1] = tempArtPerf;
 	}
-
-	ArtPerf* artPerf = (ArtPerf*)malloc(sizeof(ArtPerf) * count);
-	ArtPerf tempAP;
-
-	while (fread(&tempAP, sizeof(ArtPerf), 1, file))
-	{
-		artPerf = (ArtPerf*)realloc(artPerf, ++count * sizeof(ArtPerf));
-		artPerf[count - 1] = tempAP;
-	}
-
 	fclose(file);
 
-	return artPerf;
+	return artistPerf;
 }
 
-void SetArtistPerfomancesInFile(char* fileName, ArtPerf* artPerf, int count)
+int SetArtPerfInFile(char* fileName, struct ArtistPerfomances* artPerfomances)
 {
-	FILE* file = fopen(fileName, "w");
-	fwrite(artPerf, sizeof(ArtPerf), count, file);
-	fclose(file);
+
 }
 
-void AddArtistPerfomanceInFile(char* fileName, ArtPerf artPerf)
-{
-	FILE* file = fopen(fileName, "a");
-	fwrite(&artPerf, sizeof(ArtPerf), 1, file);
-	fclose(file);
-}
+void AddArtistPerfomanceInFile(char* fileName, struct ArtistPerfomances* perfomance);

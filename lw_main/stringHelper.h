@@ -9,12 +9,7 @@ char* Concat(char* s1, char* s2)
 	size_t len1 = strlen(s1);
 	size_t len2 = strlen(s2);
 
-	char* result = malloc(len1 + len2 + 1);
-
-	if (!result) {
-		fprintf(stderr, "malloc() failed: insufficient memory!\n");
-		return NULL;
-	}
+	char* result = (char*)malloc(len1 + len2 + 1);
 
 	memcpy(result, s1, len1);
 	memcpy(result + len1, s2, len2 + 1);
@@ -24,6 +19,9 @@ char* Concat(char* s1, char* s2)
 
 char* NumberToString(unsigned long num)
 {
+	if (num == 0)
+		return "0";
+
 	unsigned long temp = num;
 	int changingSize = 0;
 	while (temp != 0)
@@ -41,16 +39,16 @@ char* NumberToString(unsigned long num)
 
 		switch (powed)
 		{
-			case 0:	str[pos++] = '0'; break;
-			case 1:	str[pos++] = '1'; break;
-			case 2:	str[pos++] = '2'; break;
-			case 3:	str[pos++] = '3'; break;
-			case 4:	str[pos++] = '4'; break;
-			case 5:	str[pos++] = '5'; break;
-			case 6:	str[pos++] = '6'; break;
-			case 7:	str[pos++] = '7'; break;
-			case 8:	str[pos++] = '8'; break;
-			case 9:	str[pos++] = '9'; break;
+		case 0:	str[pos++] = '0'; break;
+		case 1:	str[pos++] = '1'; break;
+		case 2:	str[pos++] = '2'; break;
+		case 3:	str[pos++] = '3'; break;
+		case 4:	str[pos++] = '4'; break;
+		case 5:	str[pos++] = '5'; break;
+		case 6:	str[pos++] = '6'; break;
+		case 7:	str[pos++] = '7'; break;
+		case 8:	str[pos++] = '8'; break;
+		case 9:	str[pos++] = '9'; break;
 		}
 	}
 	str[pos++] = '\0';
@@ -74,7 +72,7 @@ char** SliceStrings(char** strReturn, int retPos, int pos, char* str, char separ
 	}
 	tempStr[strElements] = '\0';
 
-	strReturn[retPos] = (char*)malloc(sizeof(char) * 1);
+	strReturn[retPos] = (char*)malloc(sizeof(char));
 	strReturn[retPos][0] = '\0';
 
 	strReturn[retPos] = Concat(strReturn[retPos], tempStr);
@@ -84,11 +82,10 @@ char** SliceStrings(char** strReturn, int retPos, int pos, char* str, char separ
 
 char** Split(char* str, char separator, int* size)
 {
-	//int countElements = 0
-	for (size_t i = 0; i < strlen(str); i++) if (str[i] == separator) size++;
+	for (size_t i = 0; i < strlen(str); i++) if (str[i] == separator) (*size) += 1;
 
-	char** strReturn = (char**)malloc(size);
-	
+	char** strReturn = (char**)malloc(*size);
+
 	strReturn = SliceStrings(strReturn, 0, 0, str, separator);
 
 	return strReturn;
@@ -122,30 +119,4 @@ long FromStringToNumber(char* str)
 	}
 
 	return number;
-}
-
-int* ConvertStringToAsciiArray(char* string)
-{
-	int* asciiArray = (int*)malloc(sizeof(int) * strlen(string));
-
-	for (size_t i = 0; i < strlen(string); i++)
-	{
-		asciiArray[i] = (int)string[i];
-	}
-
-	return asciiArray;
-}
-
-char* ConvertFromAsciiArrayToString(int* asciiArray)
-{
-	int arrLength = sizeof(asciiArray) / sizeof(int);
-	char* string = (char*)malloc(arrLength + 1);
-
-	for (size_t i = 0; i < arrLength; i++)
-	{
-		string[i] = (char)asciiArray[i];
-	}
-	string[arrLength] = '\0';
-
-	return string;
 }
