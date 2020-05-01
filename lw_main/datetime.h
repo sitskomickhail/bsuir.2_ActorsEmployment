@@ -8,7 +8,7 @@
 #define OUT_OF_MONTH_EXCEPTION 0
 #define OUT_OF_YEAR_EXCEPTION 0
 #define OUT_OF_HOUR_EXCEPTION 0
-#define OUT_OF_MINUTE_EXCEPTION 0
+#define OUT_OF_MINUTE_EXCEPTION -1
 
 enum Months
 {
@@ -91,7 +91,7 @@ int InitYear(int year)
 
 int InitHours(int hour)
 {
-	if (hour > 23 || hour < 0)
+	if (hour > 24 || hour < 1)
 		return OUT_OF_HOUR_EXCEPTION;
 	return hour;
 }

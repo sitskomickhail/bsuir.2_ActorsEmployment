@@ -88,7 +88,7 @@ struct ArtistPerfomances* GetArtPerfFromFile(char* fileName, int* count)
 		return NULL;
 	}
 
-	struct ArtistPerfomances* artPerfs = (struct ArtistPerfomances*)malloc(0);
+	struct ArtistPerfomances* artPerfs = (struct ArtistPerfomances*)malloc(sizeof(struct ArtistPerfomances));
 
 	int size = 0;
 
@@ -185,4 +185,93 @@ int SetArtPerfInFile(char* fileName, struct ArtistPerfomances* artPerfomances, i
 	fclose(file);
 
 	return 1;
+}
+
+enum FindBy
+{
+	Art = 1,
+	Perf,
+	Salary,
+	Role
+};
+
+struct ArtistPerfomances* FindArtPerfByParam(struct ArtistPerfomances* artPerfomances, int artPerfCount, struct Artist* artists, int artCount,
+	struct Perfomance* perfomances, int perfCount, char* name, char* title, long salary, char* role, int findBy, int* foundCount)
+{
+	(*foundCount) = 0;
+	struct ArtistPerfomances* foundPerfomances = (struct ArtistPerfomances*)malloc(0);
+
+	switch (findBy)
+	{
+	case Art:
+	{
+		for (size_t i = 0; i < artCount; i++)
+		{
+			if (strcmp(artists[i].name, name) == 0)
+			{
+				for (size_t j = 0; j < artPerfCount; j++)
+				{
+					if (artists[i].id == artPerfomances[j].artistId)
+					{
+						(*foundCount)++;
+						foundPerfomances = (struct ArtistPerfomances*)realloc(foundPerfomances, sizeof(struct ArtistPerfomances*) * (*foundCount));
+						foundPerfomances[(*foundCount) - 1] = artPerfomances[j];
+					}
+				}
+			}
+		}
+
+		break;
+	}
+	case Perf:
+	{
+		for (size_t i = 0; i < perfCount; i++)
+		{
+			if (strcmp(perfomances[i].title, title) == 0)
+			{
+				for (size_t j = 0; j < artPerfCount; j++)
+				{
+					if (perfomances[i].id == artPerfomances[j].perfomanceId)
+					{
+						(*foundCount)++;
+						foundPerfomances = (struct ArtistPerfomances*)realloc(foundPerfomances, sizeof(struct ArtistPerfomances*) * (*foundCount));
+						foundPerfomances[(*foundCount) - 1] = artPerfomances[j];
+					}
+				}
+			}
+		}
+
+		break;
+	}
+	case Salary:
+	{
+		for (size_t i = 0; i < artPerfCount; i++)
+		{
+			if (artPerfomances[i].salary == salary)
+			{
+				(*foundCount)++;
+				foundPerfomances = (struct ArtistPerfomances*)realloc(foundPerfomances, sizeof(struct ArtistPerfomances*) * (*foundCount));
+				foundPerfomances[(*foundCount) - 1] = artPerfomances[i];
+			}
+		}
+
+		break;
+	}
+	case Role:
+	{
+		for (size_t i = 0; i < artPerfCount; i++)
+		{
+			if (strcmp(artPerfomances[i].role, role) == 0)
+			{
+				(*foundCount)++;
+				foundPerfomances = (struct ArtistPerfomances*)realloc(foundPerfomances, sizeof(struct ArtistPerfomances*) * (*foundCount));
+				foundPerfomances[(*foundCount) - 1] = artPerfomances[i];
+			}
+		}
+
+		break;
+	}
+	}
+
+	return foundPerfomances;
 }

@@ -279,3 +279,112 @@ struct Artist* FindArtistsByParams(struct Artist* artists, int artistCount, int 
 
 	return findedArtists;
 }
+
+struct Artist* Find5MostDemandedActors(struct Artist* artists, int artistCount, struct ArtistPerfomances* artPerfomances, int artPerfomancesCount, int* foundCount, int** actorsUsings)
+{
+	(*foundCount) = 0;
+	struct Artist* foundArtists = (struct Artist*)malloc(sizeof(struct Artist) * artistCount);
+	(*actorsUsings) = (int*)calloc(5, sizeof(int));
+	int* actorsUsingCounter = (int*)calloc(artistCount, sizeof(int));
+
+	for (size_t i = 0; i < artistCount; i++)
+	{
+		for (size_t j = 0; j < artPerfomancesCount; j++)
+		{
+			if (artists[i].id == artPerfomances[i].artistId)
+			{
+				actorsUsingCounter[i]++;
+			}
+		}
+	}
+
+	for (size_t i = 0; i < artistCount; i++)
+	{
+		foundArtists[i].id = artists[i].id;
+		foundArtists[i].name = (char*)malloc(sizeof(char));
+
+		strcpy(foundArtists[i].name, artists[i].name);
+		foundArtists[i].birthDate = artists[i].birthDate;
+	}
+
+	bool changed = true;
+	while (changed)
+	{
+		changed = false;
+		for (size_t i = 0; i < artistCount - 1; i++)
+		{
+			if (actorsUsingCounter[i] < actorsUsingCounter[i + 1])
+			{
+				struct Artist tempArtist;
+				tempArtist.id = foundArtists[i].id;
+				tempArtist.birthDate = foundArtists[i].birthDate;
+				tempArtist.name = (char*)malloc(1);
+				strcpy(tempArtist.name, foundArtists[i].name);
+
+				foundArtists[i].id = foundArtists[i + 1].id;
+				foundArtists[i].birthDate = foundArtists[i + 1].birthDate;
+				strcpy(foundArtists[i].name, foundArtists[i + 1].name);
+
+				foundArtists[i + 1].id = tempArtist.id;
+				foundArtists[i + 1].birthDate = tempArtist.birthDate;
+				foundArtists[i + 1].name = (char*)malloc(1);
+				strcpy(foundArtists[i + 1].name, tempArtist.name);
+
+				int value = actorsUsingCounter[i];
+				actorsUsingCounter[i] = actorsUsingCounter[i + 1];
+				actorsUsingCounter[i + 1] = actorsUsingCounter[i];
+
+				changed = true;
+			}
+		}
+	}
+
+	foundArtists = (struct Artist*)realloc(foundArtists, sizeof(struct Artist) * 5);
+	actorsUsingCounter = (int*)realloc(actorsUsingCounter, sizeof(int) * 5);
+
+	int counter = 0;
+	for (size_t i = 0; i < 5; i++)
+	{
+		if (actorsUsingCounter[i] == 0)
+		{
+			foundArtists = (struct Artist*)realloc(foundArtists, sizeof(struct Artist) * counter);
+			actorsUsingCounter = (int*)realloc(actorsUsingCounter, sizeof(int) * counter);
+			break;
+		}
+
+		counter++;
+	}
+
+	for (size_t i = 0; i < counter; i++)
+	{
+		(*actorsUsings)[i] = actorsUsingCounter[i];
+		(*foundCount)++;
+	}
+
+	/*for (size_t i = 0; i < artistCount; i++)
+	{
+		if ((*foundCount) == 5)
+		{
+			break;
+		}
+
+		int counter = 5;
+		for (size_t j = i; j < artistCount; j++)
+		{
+			if (actorsUsingCounter[i] <= actorsUsingCounter[j])
+			{
+				counter--;
+			}
+		}
+
+		if (counter < 5 + (*foundCount))
+		{
+			(*foundCount)++;
+			foundArtists = (struct Artist*)realloc(foundArtists, sizeof(struct Artist) * (*foundCount));
+			foundArtists[(*foundCount) - 1] = artists[i];
+			(*actorsUsings)[(*foundCount) - 1] = actorsUsingCounter[i];
+		}
+	}*/
+
+	return foundArtists;
+}

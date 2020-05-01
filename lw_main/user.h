@@ -31,7 +31,7 @@ bool CheckHash(unsigned long hashPassword, unsigned long hash, char* password)
 
 User* GetUsersFromFile(char* fileName, int* length)
 {
-	User* users = (User*)malloc(sizeof(User) * 0);
+	User* users = (User*)malloc(sizeof(User) * 100);
 	char buffer[10000];
 	buffer[0] = '\0';
 
@@ -100,7 +100,6 @@ User* GetUsersFromFile(char* fileName, int* length)
 			retPos++;
 		}
 
-		users = (User*)realloc(users, sizeof(User) * (i + 1));
 		users[i].login.login = (char*)malloc(sizeof(char));
 		
 		strcpy(users[i].login.login, splittedUser[0]);
