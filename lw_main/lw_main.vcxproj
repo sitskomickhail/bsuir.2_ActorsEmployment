@@ -130,6 +130,7 @@
     <ClInclude Include="artistPerfomance.h" />
     <ClInclude Include="artists.h" />
     <ClInclude Include="datetime.h" />
+    <ClInclude Include="perfomances.h" />
     <ClInclude Include="stringHelper.h" />
     <ClInclude Include="structures.h" />
     <ClInclude Include="user.h" />

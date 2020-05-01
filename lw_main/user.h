@@ -3,6 +3,7 @@
 #include "string.h"
 #include "stringHelper.h"
 #include "structures.h"
+#include "dos.h"
 
 #define LOGIN_OR_PASSWORD_NOT_CORRECT -1
 
@@ -28,10 +29,10 @@ bool CheckHash(unsigned long hashPassword, unsigned long hash, char* password)
 	return false;
 }
 
-User* GetUsersFromFile(char* fileName)
+User* GetUsersFromFile(char* fileName, int* length)
 {
 	User* users = (User*)malloc(sizeof(User) * 0);
-	char* buffer = (char*)malloc(1000);
+	char buffer[10000];
 	buffer[0] = '\0';
 
 	FILE* file = fopen(fileName, "r");
@@ -42,31 +43,72 @@ User* GetUsersFromFile(char* fileName)
 	{
 		buffer[count++] = elem;
 	}
-	
-	buffer = (char*)realloc(buffer, count + 1);
+	fclose(file);
 	buffer[count] = '\0';
 
-	fclose(file);
-
 	int size = 0;
-	char** splitted = Split(buffer, '\n', &size);
 
-	//int size = sizeof(splitted);
+	char splitted[100][100];
+
+	char separator = '\n';
+	int pos = 0;
+	int retPos = 0;
+	while (buffer[pos] != '\0')
+	{
+		char* tempStr = (char*)malloc(sizeof(char) * 100);
+
+		int strElements = 0;
+		while (buffer[pos] != separator && buffer[pos] != '\0')
+		{
+
+			tempStr[strElements++] = buffer[pos++];
+		}
+		pos++;
+		tempStr[strElements] = '\0';
+
+		splitted[retPos][0] = '\0';
+		strcpy(splitted[retPos], tempStr);
+
+		size++;
+		retPos++;
+	}
 
 	for (size_t i = 0; i < size; i++)
 	{
-		char** splittedUser = Split(splitted[i], ';', 0);
+		int int_value = 0;
+		char splittedUser[100][100];
 
-		users = (User*)realloc(users, i + 1);
-		users[i].login.login = (char*)malloc(1);
-		users[i].login.login[0] = '\0';
+		separator = ';';
+		pos = 0;
+		retPos = 0;
+		while (pos < strlen(splitted[i]))
+		{
+			char tempStr[200];
 
-		users[i].login.login = Concat(users[i].login.login, splittedUser[0]);
-		users[i].login.password = FromStringToNumber(splittedUser[1]);
-		users[i].login.hashSalt = FromStringToNumber(splittedUser[2]);
-		users[i].permission = FromStringToNumber(splittedUser[3]);
+			int strElements = 0;
+			while (splitted[i][pos] != separator && splitted[i][pos] != '\0')
+			{
+
+				tempStr[strElements++] = splitted[i][pos++];
+			}
+			pos++;
+			tempStr[strElements] = '\0';
+
+			splittedUser[retPos][0] = '\0';
+			strcpy(splittedUser[retPos], tempStr);
+
+			retPos++;
+		}
+
+		users = (User*)realloc(users, sizeof(User) * (i + 1));
+		users[i].login.login = (char*)malloc(sizeof(char));
+		
+		strcpy(users[i].login.login, splittedUser[0]);
+		users[i].login.password = strtol(splittedUser[1], (char**)NULL, 10);
+		users[i].login.hashSalt = strtol(splittedUser[2], (char**)NULL, 10);
+		users[i].permission = (int)strtol(splittedUser[3], (char**)NULL, 10);
 	}
-
+	(*length) = size;
 	return users;
 }
 
@@ -109,17 +151,15 @@ User ChangeLoginPassword(char* login, char* password, User user)
 
 User LoginIn(char* fileName, char* login, char* password)
 {
-	FILE* file = fopen(fileName, "a+");
+	int length = 0;
+	User* users = GetUsersFromFile(fileName, &length);
 
-	User* users = GetUsersFromFile(fileName);
-
-	for (size_t i = 0; i < (int)(sizeof(users) / sizeof(User)); i++)
+	for (size_t i = 0; i < length; i++)
 	{
-		if (CheckHash(users[i].login.login, users[i].login.hashSalt, login))
+		if (strcmp(users[i].login.login, login) == 0)
 		{
 			if (CheckHash(users[i].login.password, users[i].login.hashSalt, password))
 			{
-				fclose(file);
 				return users[i];
 			}
 			else
@@ -128,22 +168,6 @@ User LoginIn(char* fileName, char* login, char* password)
 			}
 		}
 	}
-
-	/*while (fread_s(&userFromFile, sizeof(userFromFile), sizeof(User), 1, file))
-	{
-		if (CheckHash(userFromFile.login.login, userFromFile.login.hashSalt, login))
-		{
-			if (CheckHash(userFromFile.login.password, userFromFile.login.hashSalt, password))
-			{
-				fclose(file);
-				return userFromFile;
-			}
-			else
-			{
-				break;
-			}
-		}
-	}*/
 
 	User userFromFile;
 	userFromFile.permission = LOGIN_OR_PASSWORD_NOT_CORRECT;
@@ -176,21 +200,6 @@ void AddUserInFile(char* fileName, User user)
 	char* buffer = CreateUserString(user);
 
 	FILE* file = fopen(fileName, "a+");
-	fwrite(buffer, sizeof(char), strlen(buffer), file);
-	fclose(file);
-}
-
-void SetUsersInFile(char* fileName, User* users, int usersCount)
-{
-	char* buffer = (char*)malloc(sizeof(char) * 1);
-	buffer[0] = '\0';
-
-	for (size_t i = 0; i < usersCount; i++)
-	{
-		buffer = Concat(buffer, CreateUserString(users[i]));
-	}
-
-	FILE* file = fopen(fileName, "w+");
 	fwrite(buffer, sizeof(char), strlen(buffer), file);
 	fclose(file);
 }

@@ -4,11 +4,11 @@
 #include "stringHelper.h"
 #include "structures.h"
 
-#define OUT_OF_DAY_EXCEPTION -1
-#define OUT_OF_MONTH_EXCEPTION -1
-#define OUT_OF_YEAR_EXCEPTION -1
-#define OUT_OF_HOUR_EXCEPTION -1
-#define OUT_OF_MINUTE_EXCEPTION -1
+#define OUT_OF_DAY_EXCEPTION 0
+#define OUT_OF_MONTH_EXCEPTION 0
+#define OUT_OF_YEAR_EXCEPTION 0
+#define OUT_OF_HOUR_EXCEPTION 0
+#define OUT_OF_MINUTE_EXCEPTION 0
 
 enum Months
 {
@@ -91,7 +91,7 @@ int InitYear(int year)
 
 int InitHours(int hour)
 {
-	if (hour > 23 || hour < 0)	
+	if (hour > 23 || hour < 0)
 		return OUT_OF_HOUR_EXCEPTION;
 	return hour;
 }
@@ -152,4 +152,28 @@ char* DateTimeToString(struct DateTime dateTime)
 	strDate[16] = '/0';
 
 	return strDate;
+}
+
+int CheckDate(struct DateTime date1, struct DateTime date2)
+{
+	if (date1.year > date2.year) return 1;
+	else if (date1.year < date2.year) return -1;
+
+	if (date1.month > date2.month) return 1;
+	else if (date1.month < date2.month) return -1;
+
+	if (date1.day > date2.day) return 1;
+	else if (date1.day < date2.day) return -1;
+
+	if (date1.hours == -1 || date2.hours == -1)
+		return 0;
+
+
+	if (date1.hours > date2.hours) return 1;
+	else if (date1.hours < date2.hours) return -1;
+
+	if (date1.minutes > date2.minutes) return 1;
+	else if (date1.minutes < date2.minutes) return -1;
+
+	return 0;
 }

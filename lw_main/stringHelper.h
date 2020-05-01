@@ -3,6 +3,8 @@
 #include "stdlib.h"
 #include "math.h"
 #include "stdbool.h"
+#include "string.h"
+#include "conio.h"
 
 char* Concat(char* s1, char* s2)
 {
@@ -63,32 +65,54 @@ char** SliceStrings(char** strReturn, int retPos, int pos, char* str, char separ
 		return strReturn;
 	}
 
-	char* tempStr = (char*)malloc(sizeof(char) * 100);
-
-	int strElements = 0;
-	while (str[pos] != separator && str[pos] != '\0')
-	{
-		tempStr[strElements++] = str[pos++];
-	}
-	tempStr[strElements] = '\0';
-
-	strReturn[retPos] = (char*)malloc(sizeof(char));
-	strReturn[retPos][0] = '\0';
-
-	strReturn[retPos] = Concat(strReturn[retPos], tempStr);
 
 	return SliceStrings(strReturn, ++retPos, ++pos, str, separator);
 }
 
 char** Split(char* str, char separator, int* size)
 {
-	for (size_t i = 0; i < strlen(str); i++) if (str[i] == separator) (*size) += 1;
+	for (size_t i = 0; i < strlen(str); i++)
+	{
+		if (str[i] == separator)
+		{
+			(*size) += 1;
+		}
+	}
+	if (separator == ';')
+		(*size) += 1;
 
-	char** strReturn = (char**)malloc(*size);
 
-	strReturn = SliceStrings(strReturn, 0, 0, str, separator);
+	char strReturn[100][100];
 
-	return strReturn;
+	int pos = 0;
+	int retPos = 0;
+	while (str[pos] != '\0')
+	{
+		char* tempStr = (char*)malloc(sizeof(char) * 100);
+
+		int strElements = 0;
+		while (str[pos] != separator && str[pos] != '\0')
+		{
+
+			tempStr[strElements++] = str[pos++];
+		}
+		pos++;
+		tempStr[strElements] = '\0';
+
+		strReturn[retPos][0] = '\0';
+		strcpy(strReturn[retPos], tempStr);
+
+		retPos++;
+	}
+
+	char** resultValue = (char*)malloc((*size));
+	for (size_t i = 0; i < (*size); i++)
+	{
+		resultValue[i] = (char*)malloc(strlen(strReturn[i]));
+		strcpy(resultValue[i], strReturn[i]);
+	}
+
+	return resultValue;
 }
 
 long FromStringToNumber(char* str)

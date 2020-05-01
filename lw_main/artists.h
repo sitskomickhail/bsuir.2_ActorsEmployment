@@ -4,43 +4,26 @@
 #include "stringHelper.h"
 #include "structures.h"
 #include "stdio.h"
+#include "stdbool.h"
+#include "datetime.h"
 
-struct Artist ChangeArtistName(char* name, struct Artist artist)
+struct Artist SetNewArtistInfo(char* name, struct DateTime birthDate, struct Artist* artists, int artCount)
 {
-	if (name != NULL)
+	int id = rand() % 10000 + 1;
+	for (size_t i = 0; i < artCount; i++)
 	{
-		strcmp(artist.name, name);
-	}
-
-	return artist;
-}
-
-struct Artist SetNewArtistInfo(char* name, DateTime birthDate, struct Artist prevArtist)
-{
-	int id;
-	if (strlen(prevArtist.name) == 0) { id = 0; }
-	else { id = prevArtist.id++; }
-
-	Artist artist;
-	artist.id = id;
-	strcmp(artist.name, name);
-	artist.birthDate = birthDate;
-	
-	return artist;
-}
-
-struct Artist InitArtist(struct Artist* prevArtist, char* artName)
-{
-	int id = 0;
-	if (prevArtist != NULL)
-	{
-		id = prevArtist->id + 1;
+		if (artists[i].id == id)
+		{
+			id = rand() % 10000 + 1;
+			i = -1;
+		}
 	}
 
 	struct Artist artist;
-
 	artist.id = id;
-	artist.name = artName;
+	artist.name = (char*)malloc(0);
+	strcpy(artist.name, name);
+	artist.birthDate = birthDate;
 
 	return artist;
 }
@@ -49,7 +32,7 @@ struct Artist* GetArtistsFromFile(char* fileName, int* count)
 {
 	(*count) = 0;
 
-	char* buffer = (char*)malloc(1000);
+	char buffer[1000];
 	buffer[0] = '\0';
 
 	char elem;
@@ -70,8 +53,6 @@ struct Artist* GetArtistsFromFile(char* fileName, int* count)
 	}
 
 	fclose(file);
-
-	buffer = (char*)realloc(buffer, strPos + 1);
 	buffer[strPos] = '\0';
 
 	if (strlen(buffer) == 0)
@@ -82,18 +63,70 @@ struct Artist* GetArtistsFromFile(char* fileName, int* count)
 	struct Artist* artists = (struct Artist*)malloc(0);
 
 	int size = 0;
-	char** splitted = Split(buffer, '\n', &size);
+
+	char splitted[100][100];
+
+	char separator = '\n';
+	int pos = 0;
+	int retPos = 0;
+	while (buffer[pos] != '\0')
+	{
+		char* tempStr = (char*)malloc(sizeof(char) * 100);
+
+		int strElements = 0;
+		while (buffer[pos] != separator && buffer[pos] != '\0')
+		{
+
+			tempStr[strElements++] = buffer[pos++];
+		}
+		pos++;
+		tempStr[strElements] = '\0';
+
+		splitted[retPos][0] = '\0';
+		strcpy(splitted[retPos], tempStr);
+
+		size++;
+		retPos++;
+	}
 
 	for (size_t i = 0; i < size; i++)
 	{
-		int val = 0;
-		char** splittedUser = Split(splitted[i], ';', &val);
+		int int_value = 0;
+		char splittedUser[100][100];
+
+		separator = ';';
+		pos = 0;
+		retPos = 0;
+		while (pos < strlen(splitted[i]))
+		{
+			char tempStr[200];
+
+			int strElements = 0;
+			while (splitted[i][pos] != separator && splitted[i][pos] != '\0')
+			{
+
+				tempStr[strElements++] = splitted[i][pos++];
+			}
+			pos++;
+			tempStr[strElements] = '\0';
+
+			splittedUser[retPos][0] = '\0';
+			strcpy(splittedUser[retPos], tempStr);
+
+			retPos++;
+		}
+
 
 		artists = (struct Artist*)realloc(artists, sizeof(struct Artist) * (i + 1));
-		artists[i].id = FromStringToNumber(splittedUser[0]);
+		artists[i].id = (int)strtol(splittedUser[0], (char**)NULL, 10);
+
 		artists[i].name = (char*)malloc(1);
-		artists[i].name[0] = '\0';
-		artists[i].name = Concat(artists[i].name, splittedUser[1]);
+		strcpy(artists[i].name, splittedUser[1]);
+
+		artists[i].birthDate.day = (int)strtol(splittedUser[2], (char**)NULL, 10);
+		artists[i].birthDate.month = (int)strtol(splittedUser[3], (char**)NULL, 10);
+		artists[i].birthDate.year = (int)strtol(splittedUser[4], (char**)NULL, 10);
+
 		(*count) += 1;
 	}
 
@@ -112,7 +145,17 @@ int SetArtistsInFile(char* fileName, struct Artist* artists, int count)
 	{
 		buffer = Concat(buffer, NumberToString(artists[i].id));
 		buffer = Concat(buffer, (char*)";");
+
 		buffer = Concat(buffer, artists[i].name);
+		buffer = Concat(buffer, (char*)";");
+
+		buffer = Concat(buffer, NumberToString(artists[i].birthDate.day));
+		buffer = Concat(buffer, (char*)";");
+		buffer = Concat(buffer, NumberToString(artists[i].birthDate.month));
+		buffer = Concat(buffer, (char*)";");
+		buffer = Concat(buffer, NumberToString(artists[i].birthDate.year));
+		buffer = Concat(buffer, (char*)";");
+
 		buffer = Concat(buffer, (char*)"\n");
 	}
 
@@ -124,5 +167,115 @@ int SetArtistsInFile(char* fileName, struct Artist* artists, int count)
 	return 1;
 }
 
-void AddArtistInFile(char* fileName, struct Artist perfomance);
-int DeleteArtist(struct Artist perfomanceForDelete, struct Artist* perfomances, struct ArtistPerfomances* artistPerfomances);
+enum SortBy
+{
+	Name = 1,
+	Date
+};
+
+struct Artist* SortArtistsArray(struct Artist* artists, int artistCount, int whatSortBy)
+{
+	bool changed = true;
+	switch (whatSortBy)
+	{
+	case Name:
+	{
+		while (changed)
+		{
+			changed = false;
+
+			for (size_t i = 0; i < artistCount - 1; i++)
+			{
+				if (strcmp(artists[i].name, artists[i + 1].name) > 0)
+				{
+					struct Artist tempArtist;
+					tempArtist.id = artists[i].id;
+					tempArtist.birthDate = artists[i].birthDate;
+					tempArtist.name = (char*)malloc(1);
+					strcpy(tempArtist.name, artists[i].name);
+
+					artists[i].id = artists[i + 1].id;
+					artists[i].birthDate = artists[i + 1].birthDate;
+					strcpy(artists[i].name, artists[i + 1].name);
+
+					artists[i + 1].id = tempArtist.id;
+					artists[i + 1].birthDate = tempArtist.birthDate;
+					artists[i + 1].name = (char*)malloc(1);
+					strcpy(artists[i + 1].name, tempArtist.name);
+
+					changed = true;
+				}
+			}
+		}
+	}
+	case Date:
+	{
+		while (changed)
+		{
+			changed = false;
+
+			for (size_t i = 0; i < artistCount - 1; i++)
+			{
+				artists[i].birthDate.hours = -1;
+				if (CheckDate(artists[i].birthDate, artists[i + 1].birthDate) > 0)
+				{
+					struct Artist tempArtist;
+					tempArtist.id = artists[i].id;
+					tempArtist.birthDate = artists[i].birthDate;
+					tempArtist.name = (char*)malloc(1);
+					strcpy(tempArtist.name, artists[i].name);
+
+					artists[i].id = artists[i + 1].id;
+					artists[i].birthDate = artists[i + 1].birthDate;
+					strcpy(artists[i].name, artists[i + 1].name);
+
+					artists[i + 1].id = tempArtist.id;
+					artists[i + 1].birthDate = tempArtist.birthDate;
+					strcpy(artists[i + 1].name, tempArtist.name);
+
+					changed = true;
+				}
+			}
+		}
+	}
+	}
+
+	return artists;
+}
+
+struct Artist* FindArtistsByParams(struct Artist* artists, int artistCount, int findBy, int* findedCount, char* name, struct DateTime date)
+{
+	(*findedCount) = 0;
+	struct Artist* findedArtists = (struct Artist*)malloc(sizeof(struct Artist) * 0);
+
+	switch (findBy)
+	{
+	case Name:
+	{
+		for (size_t i = 0; i < artistCount; i++)
+		{
+			if (strcmp(artists[i].name, name) == 0)
+			{
+				(*findedCount)++;
+				findedArtists = (struct Artist*)realloc(findedArtists, sizeof(struct Artist) * (*findedCount));
+				findedArtists[(*findedCount) - 1] = artists[i];
+			}
+		}
+	}
+	case Date:
+	{
+		date.hours = -1;
+		for (size_t i = 0; i < artistCount; i++)
+		{
+			if (CheckDate(artists[i].birthDate, date) == 0)
+			{
+				(*findedCount)++;
+				findedArtists = (struct Artist*)realloc(findedArtists, sizeof(struct Artist) * (*findedCount));
+				findedArtists[(*findedCount) - 1] = artists[i];
+			}
+		}
+	}
+	}
+
+	return findedArtists;
+}
