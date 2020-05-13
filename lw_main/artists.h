@@ -60,7 +60,7 @@ struct Artist* GetArtistsFromFile(char* fileName, int* count)
 		return NULL;
 	}
 
-	struct Artist* artists = (struct Artist*)malloc(0);
+	struct Artist* artists = (struct Artist*)malloc(sizeof(struct Artist));
 
 	int size = 0;
 
@@ -120,7 +120,7 @@ struct Artist* GetArtistsFromFile(char* fileName, int* count)
 		artists = (struct Artist*)realloc(artists, sizeof(struct Artist) * (i + 1));
 		artists[i].id = (int)strtol(splittedUser[0], (char**)NULL, 10);
 
-		artists[i].name = (char*)malloc(1);
+		artists[i].name = (char*)malloc(sizeof(char) * 20);
 		strcpy(artists[i].name, splittedUser[1]);
 
 		artists[i].birthDate.day = (int)strtol(splittedUser[2], (char**)NULL, 10);
@@ -191,7 +191,7 @@ struct Artist* SortArtistsArray(struct Artist* artists, int artistCount, int wha
 					struct Artist tempArtist;
 					tempArtist.id = artists[i].id;
 					tempArtist.birthDate = artists[i].birthDate;
-					tempArtist.name = (char*)malloc(1);
+					tempArtist.name = (char*)malloc(sizeof(char) * 10);
 					strcpy(tempArtist.name, artists[i].name);
 
 					artists[i].id = artists[i + 1].id;
@@ -200,7 +200,6 @@ struct Artist* SortArtistsArray(struct Artist* artists, int artistCount, int wha
 
 					artists[i + 1].id = tempArtist.id;
 					artists[i + 1].birthDate = tempArtist.birthDate;
-					artists[i + 1].name = (char*)malloc(1);
 					strcpy(artists[i + 1].name, tempArtist.name);
 
 					changed = true;
@@ -291,7 +290,7 @@ struct Artist* Find5MostDemandedActors(struct Artist* artists, int artistCount, 
 	{
 		for (size_t j = 0; j < artPerfomancesCount; j++)
 		{
-			if (artists[i].id == artPerfomances[i].artistId)
+			if (artists[i].id == artPerfomances[j].artistId)
 			{
 				actorsUsingCounter[i]++;
 			}
@@ -301,7 +300,7 @@ struct Artist* Find5MostDemandedActors(struct Artist* artists, int artistCount, 
 	for (size_t i = 0; i < artistCount; i++)
 	{
 		foundArtists[i].id = artists[i].id;
-		foundArtists[i].name = (char*)malloc(sizeof(char));
+		foundArtists[i].name = (char*)malloc(sizeof(char) * 15);
 
 		strcpy(foundArtists[i].name, artists[i].name);
 		foundArtists[i].birthDate = artists[i].birthDate;
@@ -318,7 +317,7 @@ struct Artist* Find5MostDemandedActors(struct Artist* artists, int artistCount, 
 				struct Artist tempArtist;
 				tempArtist.id = foundArtists[i].id;
 				tempArtist.birthDate = foundArtists[i].birthDate;
-				tempArtist.name = (char*)malloc(1);
+				tempArtist.name = (char*)malloc(sizeof(char) * 10);
 				strcpy(tempArtist.name, foundArtists[i].name);
 
 				foundArtists[i].id = foundArtists[i + 1].id;
@@ -327,12 +326,11 @@ struct Artist* Find5MostDemandedActors(struct Artist* artists, int artistCount, 
 
 				foundArtists[i + 1].id = tempArtist.id;
 				foundArtists[i + 1].birthDate = tempArtist.birthDate;
-				foundArtists[i + 1].name = (char*)malloc(1);
 				strcpy(foundArtists[i + 1].name, tempArtist.name);
 
 				int value = actorsUsingCounter[i];
 				actorsUsingCounter[i] = actorsUsingCounter[i + 1];
-				actorsUsingCounter[i + 1] = actorsUsingCounter[i];
+				actorsUsingCounter[i + 1] = value;
 
 				changed = true;
 			}
@@ -387,4 +385,37 @@ struct Artist* Find5MostDemandedActors(struct Artist* artists, int artistCount, 
 	}*/
 
 	return foundArtists;
+}
+
+struct Artist* FiterArtistsArray(struct Artist* artists, int artistCount, char** filteringNames, int filNCount, struct DateTime filteringStartDate, struct DateTime filteringEndDate, int* count)
+{
+	struct Artist* foundArtits = (struct Artist*)malloc(sizeof(struct Artist) * artistCount);
+	(*count) = 0;
+
+	if (filteringNames != NULL)
+	{
+		for (size_t i = 0; i < artistCount; i++)
+		{
+			for (size_t j = 0; j < filNCount; j++)
+			{
+				if (strstr(artists[i].name, filteringNames[j]) != NULL)
+				{
+					foundArtits[(*count)++] = artists[i];
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		for (size_t i = 0; i < artistCount; i++)
+		{
+			if (CheckDate(artists[i].birthDate, filteringStartDate) == 1 && CheckDate(artists[i].birthDate, filteringEndDate) == -1)
+			{
+				foundArtits[(*count)++] = artists[i];
+			}
+		}
+	}
+
+	return foundArtits;
 }

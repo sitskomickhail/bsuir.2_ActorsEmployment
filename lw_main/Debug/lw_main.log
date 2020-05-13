@@ -1,47 +1,52 @@
 ﻿  Source.c
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\stringHelper.h(63,10): warning C4018:  '>=': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\stringHelper.h(109,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\stringHelper.h(108,1): warning C4047:  'initializing': 'char **' differs in levels of indirection from 'char *'
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\datetime.h(152,20): warning C4305:  '=': truncation from 'int' to 'char'
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\user.h(76,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\user.h(84,14): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\user.h(156,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artists.h(13,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artists.h(92,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artists.h(100,14): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artists.h(144,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artists.h(187,25): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artists.h(217,25): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artists.h(255,24): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artists.h(268,24): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artists.h(290,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artists.h(292,24): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artists.h(301,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artists.h(314,24): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artists.h(358,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artistPerfomance.h(9,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artistPerfomance.h(120,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artistPerfomance.h(128,14): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artistPerfomance.h(169,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artistPerfomance.h(208,24): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artistPerfomance.h(212,26): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artistPerfomance.h(228,24): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artistPerfomance.h(232,26): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artistPerfomance.h(248,24): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\artistPerfomance.h(262,24): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\perfomances.h(11,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\perfomances.h(95,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\perfomances.h(103,14): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\perfomances.h(151,23): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\perfomances.h(201,25): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\perfomances.h(239,25): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\perfomances.h(277,25): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\perfomances.h(315,25): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\perfomances.h(361,24): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\perfomances.h(373,24): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\perfomances.h(385,24): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\perfomances.h(397,24): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\Source.c(70,12): warning C4013:  'time' undefined; assuming extern returning int
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\Source.c(1987,24): warning C4018:  '<': signed/unsigned mismatch
-E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\lw_main\Source.c(1996,24): warning C4018:  '<': signed/unsigned mismatch
-  lw_main.vcxproj -> E:\bsuir\2 семестр\ТРПП\ЛР2\lw_main\Debug\lw_main.exe
+D:\lw_main\lw_main\stringHelper.h(63,10): warning C4018: '>=': signed/unsigned mismatch
+D:\lw_main\lw_main\stringHelper.h(109,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\stringHelper.h(108,1): warning C4047: 'initializing': 'char **' differs in levels of indirection from 'char *'
+D:\lw_main\lw_main\user.h(76,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\user.h(84,14): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\user.h(156,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\user.h(201,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(13,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(92,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(100,14): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(144,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(187,25): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(216,25): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(254,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(267,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(289,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(291,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(300,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(313,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(356,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(397,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(399,25): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artists.h(411,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artistPerfomance.h(9,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artistPerfomance.h(120,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artistPerfomance.h(128,14): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artistPerfomance.h(169,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artistPerfomance.h(208,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artistPerfomance.h(212,26): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artistPerfomance.h(228,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artistPerfomance.h(232,26): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artistPerfomance.h(248,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\artistPerfomance.h(262,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(11,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(95,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(103,14): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(150,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(200,25): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(237,25): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(275,25): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(313,25): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(359,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(371,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(383,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(395,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(415,23): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\perfomances.h(419,25): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\Source.c(72,12): warning C4013: 'time' undefined; assuming extern returning int
+D:\lw_main\lw_main\Source.c(2657,24): warning C4018: '<': signed/unsigned mismatch
+D:\lw_main\lw_main\Source.c(2666,24): warning C4018: '<': signed/unsigned mismatch
+  lw_main.vcxproj -> D:\lw_main\Debug\lw_main.exe

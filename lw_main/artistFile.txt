@@ -1,7 +1,8 @@
-6335;Mikhail;27;6;2000;
-1342;Elena;15;8;1987;
-6765;Diniil;7;12;2002;
-8659;Evegeny Sh.;13;5;2002;
-5743;Marina;11;2;1990;
-7542;Nikolay;13;9;2002;
-8468;Ignat;15;7;2002;
+6335;Mikhail Sitsko;27;6;2000;
+1342;Elena Zaitseva;15;8;1987;
+6765;Diniil Zemnov;7;12;2002;
+8659;Evegeny Shidlovskic;16;5;2002;
+5743;Marina Olobayeva;11;2;1990;
+7542;Nikolay Parfenov;13;9;2002;
+8468;Ignat Popruk;15;7;2002;
+1071;Boris Borisevich;25;8;1985;

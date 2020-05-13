@@ -194,11 +194,23 @@ char* CreateUserString(User user)
 	return buffer;
 }
 
-void AddUserInFile(char* fileName, User user)
+int AddUserInFile(char* fileName, User user)
 {
+	int length = 0;
+	User* users = GetUsersFromFile(fileName, &length);
+	for (size_t i = 0; i < length; i++)
+	{
+		if (strcmp(users[i].login.login, user.login.login) == 0)
+		{
+			return 0;
+		}
+	}
+
 	char* buffer = CreateUserString(user);
 
 	FILE* file = fopen(fileName, "a+");
 	fwrite(buffer, sizeof(char), strlen(buffer), file);
 	fclose(file);
+
+	return 1;
 }

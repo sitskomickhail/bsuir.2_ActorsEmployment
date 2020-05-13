@@ -99,7 +99,7 @@ struct ArtistPerfomances* GetArtPerfFromFile(char* fileName, int* count)
 	int retPos = 0;
 	while (buffer[pos] != '\0')
 	{
-		char* tempStr = (char*)malloc(sizeof(char) * 100);
+		char tempStr[200];
 
 		int strElements = 0;
 		while (buffer[pos] != separator && buffer[pos] != '\0')

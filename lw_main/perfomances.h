@@ -63,7 +63,7 @@ struct Perfomance* GetPerfomancesFromFile(char* fileName, int* count)
 		return NULL;
 	}
 
-	struct Perfomance* perfomances = (struct Perfomance*)malloc(0);
+	struct Perfomance* perfomances = (struct Perfomance*)malloc(sizeof(struct Perfomance));
 
 	int size = 0;
 
@@ -119,13 +119,12 @@ struct Perfomance* GetPerfomancesFromFile(char* fileName, int* count)
 			retPos++;
 		}
 
-
 		perfomances = (struct Perfomance*)realloc(perfomances, sizeof(struct Perfomance) * (i + 1));
 		perfomances[i].id = (int)strtol(splittedUser[0], (char**)NULL, 10);
 		perfomances[i].ticketCost = (int)strtol(splittedUser[1], (char**)NULL, 10);
 		perfomances[i].ticketCount = (int)strtol(splittedUser[2], (char**)NULL, 10);
 
-		perfomances[i].title = (char*)malloc(sizeof(char));
+		perfomances[i].title = (char*)malloc(sizeof(char) * 50);
 		strcpy(perfomances[i].title, splittedUser[3]);
 
 		perfomances[i].time.minutes = (int)strtol(splittedUser[4], (char**)NULL, 10);
@@ -207,7 +206,7 @@ struct Perfomance* SortPerfomancesArray(struct Perfomance* perfomances, int perf
 					perfomance.time = perfomances[i].time;
 					perfomance.ticketCost = perfomances[i].ticketCost;
 					perfomance.ticketCount = perfomances[i].ticketCount;
-					perfomance.title = (char*)malloc(1);
+					perfomance.title = (char*)malloc(sizeof(char) * 10);
 					strcpy(perfomance.title, perfomances[i].title);
 
 
@@ -222,7 +221,6 @@ struct Perfomance* SortPerfomancesArray(struct Perfomance* perfomances, int perf
 					perfomances[i + 1].time = perfomance.time;
 					perfomances[i + 1].ticketCost = perfomance.ticketCost;
 					perfomances[i + 1].ticketCount = perfomance.ticketCount;
-					perfomances[i + 1].title = (char*)malloc(1);
 					strcpy(perfomances[i + 1].title, perfomance.title);
 
 					changed = true;
@@ -407,4 +405,54 @@ struct Perfomance* FindPerfomancesByParams(struct Perfomance* perfomances, int p
 	}
 
 	return findedPerfomances;
+}
+
+struct Perfomance* FilterPerfomancesArray(struct Perfomance* perfomances, int perfomanceCount, char** titles, int length, int* ticketsDiapazon, int* costDiapazon, struct DateTime startDate, struct DateTime endDate, int* counter)
+{
+	struct Perfomance* foundPerfomances = (struct Perfomance*)malloc(sizeof(struct Perfomance) * perfomanceCount);
+	(*counter) = 0;
+
+	for (size_t i = 0; i < perfomanceCount; i++)
+	{
+		if (titles != NULL)
+		{
+			for (size_t j = 0; j < length; j++)
+			{
+				if (strstr(perfomances[i].title, titles[j]) != NULL)
+				{
+					foundPerfomances[(*counter)++] = perfomances[i];
+					break;
+				}
+			}
+		}
+		else if (ticketsDiapazon != NULL)
+		{
+			int lowCount = ticketsDiapazon[0];
+			int highCount = ticketsDiapazon[1];
+
+			if (perfomances[i].ticketCount >= lowCount && perfomances[i].ticketCount <= highCount)
+			{
+				foundPerfomances[(*counter)++] = perfomances[i];
+			}
+		}
+		else if (costDiapazon != NULL)
+		{
+			int lowCost = costDiapazon[0];
+			int highCost = costDiapazon[1];
+
+			if (perfomances[i].ticketCost >= lowCost && perfomances[i].ticketCost <= highCost)
+			{
+				foundPerfomances[(*counter)++] = perfomances[i];
+			}
+		}
+		else
+		{
+			if (CheckDate(perfomances[i].time, startDate) == 1 && CheckDate(perfomances[i].time, endDate) == -1)
+			{
+				foundPerfomances[(*counter)++] = perfomances[i];
+			}
+		}
+	}
+
+	return foundPerfomances;
 }

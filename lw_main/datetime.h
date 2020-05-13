@@ -7,7 +7,7 @@
 #define OUT_OF_DAY_EXCEPTION 0
 #define OUT_OF_MONTH_EXCEPTION 0
 #define OUT_OF_YEAR_EXCEPTION 0
-#define OUT_OF_HOUR_EXCEPTION 0
+#define OUT_OF_HOUR_EXCEPTION -1
 #define OUT_OF_MINUTE_EXCEPTION -1
 
 enum Months
@@ -103,53 +103,171 @@ int InitMinutes(int minute)
 	return minute;
 }
 
-char* DateTimeToString(struct DateTime dateTime)
+char* DateTimeToString_RU(struct DateTime dateTime, bool isArtist)
 {
 	char* strDate = (char*)malloc(sizeof(char) * 17);
 
 	char* sDay = NumberToString(dateTime.day);
 	if (dateTime.day < 10)
 	{
-		sDay[1] = sDay[0];
-		sDay[0] = '0';
+		strDate[1] = sDay[0];
+		strDate[0] = '0';
+	}
+	else
+	{
+		strDate[0] = sDay[0];
+		strDate[1] = sDay[1];
 	}
 
+	strDate[2] = '.';
 	char* sMonth = NumberToString(dateTime.month);
 	if (dateTime.month < 10)
 	{
-		sDay[1] = sDay[0];
-		sDay[0] = '0';
+		strDate[4] = sMonth[0];
+		strDate[3] = '0';
 	}
+	else
+	{
+		strDate[3] = sMonth[0];
+		strDate[4] = sMonth[1];
+	}
+	strDate[5] = '.';
 
 	char* sYear = NumberToString(dateTime.year);
+
+	strDate[6] = sYear[0];
+	strDate[7] = sYear[1];
+	strDate[8] = sYear[2];
+	strDate[9] = sYear[3];
+
+	if (isArtist)
+	{
+		strDate[10] = '\0';
+		return strDate;
+	}
+
+	strDate[10] = ' ';
 
 	char* sHour = NumberToString(dateTime.hours);
 	if (dateTime.hours < 10)
 	{
-		sHour[1] = sHour[0];
-		sHour[0] = '0';
+		strDate[12] = sHour[0];
+		strDate[11] = '0';
 	}
+	else
+	{
+		strDate[11] = sHour[0];
+		strDate[12] = sHour[1];
+	}
+	strDate[13] = ':';
 
 	char* sMinute = NumberToString(dateTime.minutes);
 	if (dateTime.minutes < 10)
 	{
-		sMinute[1] = sMinute[0];
-		sMinute[0] = '0';
+		strDate[15] = sMinute[0];
+		strDate[14] = '0';
+	}
+	else
+	{
+		strDate[14] = sMinute[0];
+		strDate[15] = sMinute[1];
 	}
 
-	strDate = Concat(strDate, sDay);
-	strDate = Concat(strDate, ".");
-	strDate = Concat(strDate, sMonth);
-	strDate = Concat(strDate, ".");
-	strDate = Concat(strDate, sYear);
+	strDate[16] = '\0';
 
-	strDate = Concat(strDate, " ");
+	return strDate;
+}
 
-	strDate = Concat(strDate, sHour);
-	strDate = Concat(strDate, ":");
-	strDate = Concat(strDate, sMinute);
+char* DateTimeToString_EN(struct DateTime dateTime, bool isArtist)
+{
+	bool lower = false;
 
-	strDate[16] = '/0';
+	char* strDate = (char*)malloc(sizeof(char) * 19);
+
+	char* sMonth = NumberToString(dateTime.month);
+	if (dateTime.month < 10)
+	{
+		strDate[1] = sMonth[0];
+		strDate[0] = '0';
+	}
+	else
+	{
+		strDate[0] = sMonth[0];
+		strDate[1] = sMonth[1];
+	}
+	strDate[2] = '/';
+
+	char* sDay = NumberToString(dateTime.day);
+	if (dateTime.day < 10)
+	{
+		strDate[4] = sDay[0];
+		strDate[3] = '0';
+	}
+	else
+	{
+		strDate[3] = sDay[0];
+		strDate[4] = sDay[1];
+	}
+
+	strDate[5] = '/';
+
+	char* sYear = NumberToString(dateTime.year);
+
+	strDate[6] = sYear[0];
+	strDate[7] = sYear[1];
+	strDate[8] = sYear[2];
+	strDate[9] = sYear[3];
+
+	if (isArtist)
+	{
+		strDate[10] = '\0';
+		return strDate;
+	}
+
+	strDate[10] = ' ';
+
+	if (dateTime.hours < 12 || dateTime.hours == 24)
+		lower = true;
+	else
+		dateTime.hours -= 12;
+
+	char* sHour = NumberToString(dateTime.hours);
+	if (dateTime.hours < 10)
+	{
+		strDate[12] = sHour[0];
+		strDate[11] = '0';
+	}
+	else
+	{
+		strDate[11] = sHour[0];
+		strDate[12] = sHour[1];
+	}
+	strDate[13] = ':';
+
+	char* sMinute = NumberToString(dateTime.minutes);
+	if (dateTime.minutes < 10)
+	{
+		strDate[15] = sMinute[0];
+		strDate[14] = '0';
+	}
+	else
+	{
+		strDate[14] = sMinute[0];
+		strDate[15] = sMinute[1];
+	}
+
+	if (lower)
+	{
+		strDate[16] = 'p';
+		strDate[17] = 'm';
+	}
+	else
+	{
+		strDate[16] = 'a';
+		strDate[17] = 'm';
+	}
+
+	strDate[18] = '\0';
 
 	return strDate;
 }

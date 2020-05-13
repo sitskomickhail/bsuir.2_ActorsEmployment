@@ -44,6 +44,7 @@ char* AdminArtistMenu();
 char* EditArtistMenu();
 char* SortArtistMenu();
 char* FindArtistMenu();
+char* FilterArtistMenu();
 void ShowArtists(Artist*, int);
 void ShowDemandedArtitst(Artist*, int, int*);
 
@@ -52,6 +53,7 @@ char* AdminPerfomanceMenu();
 char* EditPerfomanceMenu();
 char* SortPerfomanceMenu();
 char* FindPerfomanceMenu();
+char* FilterPerfomanceMenu();
 void ShowPerfomances(Perfomance*, int);
 
 
@@ -72,9 +74,6 @@ int main()
 #ifdef RU
 	setlocale(LC_ALL, "rus");
 #endif // RU
-
-	//AddUserInFile(LOGIN_FILE, SetNewUser("user", "user", 2));
-	//AddUserInFile(LOGIN_FILE, SetNewUser("admin", "admin", 1));
 
 	while (1)
 	{
@@ -111,11 +110,12 @@ int main()
 
 
 			User currentUser = LoginIn(LOGIN_FILE, login, password);
-			system("cls");
 			switch (currentUser.permission)
 			{
 			case Admin:
 			{
+				system("cls");
+
 				int artistCount = 0, perfomanceCount = 0, artPerfomancesCount = 0;
 
 				Artist* artists = GetArtistsFromFile(ARTISTS_FILE, &artistCount);
@@ -164,10 +164,10 @@ int main()
 								artists = (Artist*)realloc(artists, sizeof(Artist) * (artistCount + 1));
 								artists[artistCount++] = SetNewArtistInfo(name, birthDate, artists, artistCount);
 #ifdef EN
-								printf_s("Artist added");
+								printf_s("Artist added...");
 #endif // EN
 #ifdef RU
-								printf_s("Артист добавлен...");
+								printf_s("Артист добавлен...\n");
 #endif // RU
 								SetArtistsInFile(ARTISTS_FILE, artists, artistCount);
 								system("pause");
@@ -175,97 +175,102 @@ int main()
 							}
 							case 2: // Изменение артиста
 							{
-								system("cls");
-								printf_s(EditArtistMenu());
-								switch (CaseVariant_WriteLine(3))
-								{
-								case 1: //Изменение имени
+								while (value)
 								{
 									system("cls");
-									ShowArtists(artists, artistCount);
-
-#ifdef EN
-									printf_s("Choose artist for editing: ");
-#endif // EN
-#ifdef RU
-									printf_s("Выберите изменяемого артиста: ");
-#endif // RU
-									int variant = atoi(String_WriteLine());
-									while (variant < 1 || variant > artistCount)
+									printf_s(EditArtistMenu());
+									switch (CaseVariant_WriteLine(3))
 									{
-#ifdef EN
-										printf_s("Uncorrect choose. Enter again: ");
-#endif // EN
-#ifdef RU
-										printf_s("Некорректный выбор. Введите снова: ");
-#endif // RU
-										variant = atoi(String_WriteLine());
-									}
-#ifdef EN
-									printf_s("Enter new artist name: ");
-#endif // EN
-#ifdef RU
-									printf_s("Введите новое имя артиста: ");
-#endif // RU
-
-									char* newName = String_WriteLine();
-									strcpy(artists[variant - 1].name, newName);
-									SetArtistsInFile(ARTISTS_FILE, artists, artistCount);
-#ifdef EN
-									printf_s("Name succesfully changed...");
-#endif // EN
-#ifdef RU
-									printf_s("Имя успешно изменено...");
-#endif // Ru
-									system("pause");
-									break;
-								}
-								case 2: //Изменение даты рождения
-								{
-									system("cls");
-									ShowArtists(artists, artistCount);
-
-#ifdef EN
-									printf_s("Choose artist for editing: ");
-#endif // EN
-#ifdef RU
-									printf_s("Выберите изменяемого артиста: ");
-#endif // RU
-									int variant = atoi(String_WriteLine());
-									while (variant < 1 || variant > artistCount)
+									case 1: //Изменение имени
 									{
+										system("cls");
+										ShowArtists(artists, artistCount);
+
 #ifdef EN
-										printf_s("Uncorrect choose. Enter again: ");
+										printf_s("Choose artist for editing: ");
 #endif // EN
 #ifdef RU
-										printf_s("Некорректный выбор. Введите снова: ");
+										printf_s("Выберите изменяемого артиста: ");
 #endif // RU
-										variant = atoi(String_WriteLine());
-									}
+										int variant = atoi(String_WriteLine());
+										while (variant < 1 || variant > artistCount)
+										{
 #ifdef EN
-									printf_s("Enter new artist's birth date: ");
+											printf_s("Uncorrect choose. Enter again: ");
 #endif // EN
 #ifdef RU
-									printf_s("Введите новую дату рождения артиста: ");
+											printf_s("Некорректный выбор. Введите снова: ");
+#endif // RU
+											variant = atoi(String_WriteLine());
+										}
+#ifdef EN
+										printf_s("Enter new artist name: ");
+#endif // EN
+#ifdef RU
+										printf_s("Введите новое имя артиста: ");
 #endif // RU
 
-									DateTime newDate = DateTime_WriteLine(true);
-									artists[variant - 1].birthDate = newDate;
-									SetArtistsInFile(ARTISTS_FILE, artists, artistCount);
+										char* newName = String_WriteLine();
+										strcpy(artists[variant - 1].name, newName);
+										SetArtistsInFile(ARTISTS_FILE, artists, artistCount);
 #ifdef EN
-									printf_s("Birth date succesfully changed...");
+										printf_s("Name succesfully changed...");
 #endif // EN
 #ifdef RU
-									printf_s("Дата рождения успешно изменена...");
+										printf_s("Имя успешно изменено...");
 #endif // Ru
-									system("pause");
-									break;
+										system("pause");
+										break;
+									}
+									case 2: //Изменение даты рождения
+									{
+										system("cls");
+										ShowArtists(artists, artistCount);
+
+#ifdef EN
+										printf_s("Choose artist for editing: ");
+#endif // EN
+#ifdef RU
+										printf_s("Выберите изменяемого артиста: ");
+#endif // RU
+										int variant = atoi(String_WriteLine());
+										while (variant < 1 || variant > artistCount)
+										{
+#ifdef EN
+											printf_s("Uncorrect choose. Enter again: ");
+#endif // EN
+#ifdef RU
+											printf_s("Некорректный выбор. Введите снова: ");
+#endif // RU
+											variant = atoi(String_WriteLine());
+										}
+#ifdef EN
+										printf_s("Enter new artist's birth date!\n");
+#endif // EN
+#ifdef RU
+										printf_s("Введите новую дату рождения артиста!\n");
+#endif // RU
+
+										DateTime newDate = DateTime_WriteLine(true);
+										artists[variant - 1].birthDate = newDate;
+										SetArtistsInFile(ARTISTS_FILE, artists, artistCount);
+#ifdef EN
+										printf_s("Birth date succesfully changed...\n");
+#endif // EN
+#ifdef RU
+										printf_s("Дата рождения успешно изменена...\n");
+#endif // Ru
+										system("pause");
+										break;
+									}
+									case 3: //Выход
+									{
+										value = false;
+										break;
+									}
+									}
 								}
-								case 3: //Выход
-								{
-									break;
-								}
-								}
+								value = true;
 								break;
 							}
 							case 3: // Удаление артиста
@@ -314,103 +319,214 @@ int main()
 							}
 							case 4: // Сортировка артистов
 							{
-								system("cls");
-								printf_s(SortArtistMenu());
-								switch (CaseVariant_WriteLine(3))
+								while (value)
 								{
-								case 1: // Сортировка по имени
-								{
-									artists = SortArtistsArray(artists, artistCount, 1);
+									system("cls");
+									printf_s(SortArtistMenu());
+									switch (CaseVariant_WriteLine(3))
+									{
+									case 1: // Сортировка по имени
+									{
+										artists = SortArtistsArray(artists, artistCount, 1);
 #ifdef EN
-									printf_s("\n\nSorted...");
+										printf_s("\n\nSorted...\n");
 #endif // EN
 #ifdef RU
-									printf_s("\n\nОтсортировано...");
+										printf_s("\n\nОтсортировано...\n");
 #endif // RU
-									system("pause");
-									break;
-								}
-								case 2: // Сортировка по дате рождения
-								{
-									artists = SortArtistsArray(artists, artistCount, 2);
+										system("pause");
+										break;
+									}
+									case 2: // Сортировка по дате рождения
+									{
+										artists = SortArtistsArray(artists, artistCount, 2);
 #ifdef EN
-									printf_s("\n\nSorted...");
+										printf_s("\n\nSorted...\n");
 #endif // EN
 #ifdef RU
-									printf_s("\n\nОтсортировано...");
+										printf_s("\n\nОтсортировано...\n");
 #endif // RU
-									system("pause");
-									break;
+										system("pause");
+										break;
+									}
+									case 3: // Выход
+									{
+										value = false;
+										break;
+									}
+									}
 								}
-								case 3: // Выход
-								{
-									break;
-								}
-								}
+								value = true;
+								break;
 							}
 							case 5: // Поиск артистов
 							{
-								char* name = NULL;
-								system("cls");
-								printf_s(FindArtistMenu());
-								DateTime dateTime;
-								dateTime.day = 0;
-								switch (CaseVariant_WriteLine(3))
+								while (value)
 								{
-								case 1: // Поиск по имени
-								{
+									char* name = NULL;
+									system("cls");
+									printf_s(FindArtistMenu());
+									DateTime dateTime;
+									dateTime.day = 0;
+									switch (CaseVariant_WriteLine(3))
+									{
+									case 1: // Поиск по имени
+									{
 #ifdef EN
-									printf_s("\nEnter artist's name for find: ");
+										printf_s("\nEnter artist's name for find: ");
 #endif // EN
 #ifdef RU
-									printf_s("\nВведите искомое имя актера: ");
+										printf_s("\nВведите искомое имя актера: ");
 #endif // RU
-									name = String_WriteLine();
-									int findedCount = 0;
-									Artist* findedArtists = FindArtistsByParams(artists, artistCount, 1, &findedCount, name, dateTime);
-									ShowArtists(findedArtists, findedCount);
-									system("pause");
-									break;
-								}
-								case 2: // Поиск по дате рождения
-								{
+										name = String_WriteLine();
+										int findedCount = 0;
+										Artist* findedArtists = FindArtistsByParams(artists, artistCount, 1, &findedCount, name, dateTime);
+										if (findedCount != 0)
+											ShowArtists(findedArtists, findedCount);
+										else
+										{
 #ifdef EN
-									printf_s("\nEnter artist's birth date for find\n");
+											printf_s("\nArtist not found...\n");
 #endif // EN
 #ifdef RU
-									printf_s("\nВведите дату рождения актера\n");
+											printf_s("\nАртист не найден...\n");
 #endif // RU
-									dateTime = DateTime_WriteLine(true);
-									int findedCount = 0;
-									Artist* findedArtists = FindArtistsByParams(artists, artistCount, 2, &findedCount, name, dateTime);
-									ShowArtists(findedArtists, findedCount);
-									system("pause");
-									break;
+										}
+										system("pause");
+										break;
+									}
+									case 2: // Поиск по дате рождения
+									{
+#ifdef EN
+										printf_s("\nEnter artist's birth date for find\n");
+#endif // EN
+#ifdef RU
+										printf_s("\nВведите дату рождения актера\n");
+#endif // RU
+										dateTime = DateTime_WriteLine(true);
+										int findedCount = 0;
+										Artist* findedArtists = FindArtistsByParams(artists, artistCount, 2, &findedCount, name, dateTime);
+										if (findedCount != 0)
+											ShowArtists(findedArtists, findedCount);
+										else
+										{
+#ifdef EN
+											printf_s("\nArtist not found...\n");
+#endif // EN
+#ifdef RU
+											printf_s("\nАртист не найден...\n");
+#endif // RU
+										}
+
+										system("pause");
+										break;
+									}
+									case 3:
+									{
+										value = true;
+										break;
+									}
+									}
 								}
-								case 3:
-								{
-									break;
-								}
-								}
-								system("cls");
+								value = false;
 								break;
 							}
-							case 6: // Вывод артистов
+							case 6: // Фильтрация артистов
+							{
+								while (value)
+								{
+									system("cls");
+									printf_s(FilterArtistMenu());
+
+									switch (CaseVariant_WriteLine(3))
+									{
+									case 1: // Фильтрация по имени
+									{
+#ifdef EN
+										printf_s("\nEnter name for filtering: ");
+#endif // EN
+#ifdef RU
+										printf_s("\nВведите имя, по которому будет фильтрация: ");
+#endif // RU
+
+										char* enterValue = String_WriteLine();
+										int countFilters = 0;
+										char** filteringValues = (char**)malloc(sizeof(char) * 100);
+										while (strcmp(enterValue, "exit") != 0)
+										{
+											filteringValues[countFilters] = (char*)malloc(sizeof(char) * strlen(enterValue));
+											filteringValues[countFilters++] = enterValue;
+
+#ifdef EN
+											printf_s("Enter name for filtering (Enter 'exit' for exit): ");
+#endif // EN
+#ifdef RU
+											printf_s("Введите имя, по которому будет фильтрация (Введите 'exit' для выхода): ");
+#endif // RU
+											enterValue = String_WriteLine();
+										}
+
+										DateTime date; date.day = -1;
+										int counter = 0;
+										Artist* foundArtists = FiterArtistsArray(artists, artistCount, filteringValues, countFilters, date, date, &counter);
+#ifdef EN
+										counter == 0 ? printf_s("No info found...\n") : ShowArtists(foundArtists, counter);
+#endif // EN
+#ifdef RU
+										counter == 0 ? printf_s("Информация не найдена...\n") : ShowArtists(foundArtists, counter);
+#endif // RU
+
+										value = false;
+										system("pause");
+										break;
+									}
+									case 2: // Фильтрация по дате
+									{
+										DateTime startDate, endDate;
+
+#ifdef EN
+										printf_s("\nEnter starting date birth!\n");
+#endif // EN
+#ifdef RU
+										printf_s("\nВведите стартовую дату рождения!\n");
+#endif // RU
+										startDate = DateTime_WriteLine(true);
+
+#ifdef EN
+										printf_s("\nEnter ending date birth!\n");
+#endif // EN
+#ifdef RU
+										printf_s("\nВведите конечную дату рождения!\n");
+#endif // RU
+
+										endDate = DateTime_WriteLine(true);
+
+										int counter = 0;
+										Artist* foundArtists = FiterArtistsArray(artists, artistCount, NULL, 0, startDate, endDate, &counter);
+#ifdef EN
+										counter == 0 ? printf_s("No info found...\n") : ShowArtists(foundArtists, counter);
+#endif // EN
+#ifdef RU
+										counter == 0 ? printf_s("Информация не найдена...\n") : ShowArtists(foundArtists, counter);
+#endif // RU
+										system("pause");
+										value = false;
+										break;
+									}
+									case 3: // Выход
+									{
+										value = false;
+										break;
+									}
+									}
+								}
+								value = true;
+								break;
+							}
+							case 7: // Вывод артистов
 							{
 								system("cls");
 								ShowArtists(artists, artistCount);
-								system("pause");
-								break;
-							}
-							case 7: // 5 самых востребованных актеров
-							{
-								system("cls");
-
-								int foundCount = 0;
-								int* demandCount = NULL;
-								Artist* foundArtists = Find5MostDemandedActors(artists, artistCount, artPerfomances, artPerfomancesCount, &foundCount, &demandCount);
-
-								ShowDemandedArtitst(foundArtists, foundCount, demandCount);
 								system("pause");
 								break;
 							}
@@ -430,7 +546,7 @@ int main()
 						while (value)
 						{
 							printf_s(AdminPerfomanceMenu());
-							switch (CaseVariant_WriteLine(7))
+							switch (CaseVariant_WriteLine(8))
 							{
 							case 1: // Добавление представления
 							{
@@ -501,207 +617,212 @@ int main()
 							}
 							case 2: // Изменение представления
 							{
-								system("cls");
-								printf_s(EditPerfomanceMenu());
-								switch (CaseVariant_WriteLine(5))
-								{
-								case 1: //Изменение названия
+								while (value)
 								{
 									system("cls");
-									ShowPerfomances(perfomances, perfomanceCount);
+									printf_s(EditPerfomanceMenu());
+									switch (CaseVariant_WriteLine(5))
+									{
+									case 1: //Изменение названия
+									{
+										system("cls");
+										ShowPerfomances(perfomances, perfomanceCount);
 
 #ifdef EN
-									printf_s("Choose perfomance for editing: ");
+										printf_s("Choose perfomance for editing: ");
 #endif // EN
 #ifdef RU
-									printf_s("Выберите изменяемое представление: ");
+										printf_s("Выберите изменяемое представление: ");
 #endif // RU
-									int variant = atoi(String_WriteLine());
-									while (variant < 1 || variant > perfomanceCount)
-									{
+										int variant = atoi(String_WriteLine());
+										while (variant < 1 || variant > perfomanceCount)
+										{
 #ifdef EN
-										printf_s("Uncorrect choose. Enter again: ");
+											printf_s("Uncorrect choose. Enter again: ");
 #endif // EN
 #ifdef RU
-										printf_s("Некорректный выбор. Введите снова: ");
+											printf_s("Некорректный выбор. Введите снова: ");
 #endif // RU
-										variant = atoi(String_WriteLine());
+											variant = atoi(String_WriteLine());
+										}
+
+
+#ifdef EN
+										printf_s("Enter new perfomance title: ");
+#endif // EN
+#ifdef RU
+										printf_s("Введите новое название представления: ");
+#endif // RU
+
+										char* newTitle = String_WriteLine();
+										strcpy(perfomances[variant - 1].title, newTitle);
+										SetPerfomancesInFile(PERFOMANCE_FILE, perfomances, perfomanceCount);
+#ifdef EN
+										printf_s("Title succesfully changed...");
+#endif // EN
+#ifdef RU
+										printf_s("Название успешно изменено...");
+#endif // RU
+										system("pause");
+										break;
 									}
-
-
-#ifdef EN
-									printf_s("Enter new perfomance title: ");
-#endif // EN
-#ifdef RU
-									printf_s("Введите новое название представления: ");
-#endif // RU
-
-									char* newTitle = String_WriteLine();
-									strcpy(perfomances[variant - 1].title, newTitle);
-									SetPerfomancesInFile(PERFOMANCE_FILE, perfomances, perfomanceCount);
-#ifdef EN
-									printf_s("Title succesfully changed...");
-#endif // EN
-#ifdef RU
-									printf_s("Название успешно изменено...");
-#endif // RU
-									system("pause");
-									break;
-								}
-								case 2: //Изменение количества билетов
-								{
-									system("cls");
-									ShowPerfomances(perfomances, perfomanceCount);
-
-#ifdef EN
-									printf_s("Choose perfomance for editing: ");
-#endif // EN
-#ifdef RU
-									printf_s("Выберите изменяемое представление: ");
-#endif // RU
-									int variant = atoi(String_WriteLine());
-									while (variant < 1 || variant > perfomanceCount)
+									case 2: //Изменение количества билетов
 									{
+										system("cls");
+										ShowPerfomances(perfomances, perfomanceCount);
+
 #ifdef EN
-										printf_s("Uncorrect choose. Enter again: ");
+										printf_s("Choose perfomance for editing: ");
 #endif // EN
 #ifdef RU
-										printf_s("Некорректный выбор. Введите снова: ");
+										printf_s("Выберите изменяемое представление: ");
 #endif // RU
-										variant = atoi(String_WriteLine());
-									}
-
-									int ticketCount;
+										int variant = atoi(String_WriteLine());
+										while (variant < 1 || variant > perfomanceCount)
+										{
 #ifdef EN
-									printf_s("Enter new ticket count for perfomance: ");
-									ticketCount = atoi(String_WriteLine());
-									while (ticketCount < 10)
-									{
-										printf_s("Uncorrect type. Ticket count must be number-value and 10 or more.\nEnter again:");
+											printf_s("Uncorrect choose. Enter again: ");
+#endif // EN
+#ifdef RU
+											printf_s("Некорректный выбор. Введите снова: ");
+#endif // RU
+											variant = atoi(String_WriteLine());
+										}
+
+										int ticketCount;
+#ifdef EN
+										printf_s("Enter new ticket count for perfomance: ");
 										ticketCount = atoi(String_WriteLine());
-									}
+										while (ticketCount < 10)
+										{
+											printf_s("Uncorrect type. Ticket count must be number-value and 10 or more.\nEnter again:");
+											ticketCount = atoi(String_WriteLine());
+										}
 #endif // EN
 #ifdef RU
-									printf_s("Введите новое количество билетов на представление: ");
-									ticketCount = atoi(String_WriteLine());
-									while (ticketCount < 10)
-									{
-										printf_s("Некорректный ввод. Количество билетов должно записываться числом и в количестве 10 и более.\nВведите снова:");
+										printf_s("Введите новое количество билетов на представление: ");
 										ticketCount = atoi(String_WriteLine());
-									}
+										while (ticketCount < 10)
+										{
+											printf_s("Некорректный ввод. Количество билетов должно записываться числом и в количестве 10 и более.\nВведите снова:");
+											ticketCount = atoi(String_WriteLine());
+										}
 #endif // RU
-									perfomances[variant - 1].ticketCount = ticketCount;
-									SetPerfomancesInFile(PERFOMANCE_FILE, perfomances, perfomanceCount);
+										perfomances[variant - 1].ticketCount = ticketCount;
+										SetPerfomancesInFile(PERFOMANCE_FILE, perfomances, perfomanceCount);
 #ifdef EN
-									printf_s("Ticket count succesfully changed...");
+										printf_s("Ticket count succesfully changed...");
 #endif // EN
 #ifdef RU
-									printf_s("Количество билетов успешно изменено...");
+										printf_s("Количество билетов успешно изменено...");
 #endif // RU
-									system("pause");
-									break;
-								}
-								case 3: //Изменение стоимости билетов
-								{
-									system("cls");
-									ShowPerfomances(perfomances, perfomanceCount);
+										system("pause");
+										break;
+									}
+									case 3: //Изменение стоимости билетов
+									{
+										system("cls");
+										ShowPerfomances(perfomances, perfomanceCount);
 
 #ifdef EN
-									printf_s("Choose perfomance for editing: ");
+										printf_s("Choose perfomance for editing: ");
 #endif // EN
 #ifdef RU
-									printf_s("Выберите изменяемое представление: ");
+										printf_s("Выберите изменяемое представление: ");
 #endif // RU
-									int variant = atoi(String_WriteLine());
-									while (variant < 1 || variant > perfomanceCount)
-									{
+										int variant = atoi(String_WriteLine());
+										while (variant < 1 || variant > perfomanceCount)
+										{
 #ifdef EN
-										printf_s("Uncorrect choose. Enter again: ");
+											printf_s("Uncorrect choose. Enter again: ");
 #endif // EN
 #ifdef RU
-										printf_s("Некорректный выбор. Введите снова: ");
+											printf_s("Некорректный выбор. Введите снова: ");
 #endif // RU
-										variant = atoi(String_WriteLine());
-									}
+											variant = atoi(String_WriteLine());
+										}
 
-									int ticketCost;
+										int ticketCost;
 #ifdef EN
-									printf_s("Enter new ticket cost for perfomance: ");
-									ticketCost = atoi(String_WriteLine());
-									while (ticketCost < 0)
-									{
-										printf_s("Uncorrect type. Ticket cost must be number-value and non-negative\nEnter again:");
+										printf_s("Enter new ticket cost for perfomance: ");
 										ticketCost = atoi(String_WriteLine());
-									}
+										while (ticketCost < 0)
+										{
+											printf_s("Uncorrect type. Ticket cost must be number-value and non-negative\nEnter again:");
+											ticketCost = atoi(String_WriteLine());
+										}
 #endif // EN
 #ifdef RU
-									printf_s("Введите новую стоимость билета на представление: ");
-									ticketCost = atoi(String_WriteLine());
-									while (ticketCost < 0)
-									{
-										printf_s("Некорректный ввод. Стоимость билета должна записываться положительным числом\nВведите снова:");
+										printf_s("Введите новую стоимость билета на представление: ");
 										ticketCost = atoi(String_WriteLine());
+										while (ticketCost < 0)
+										{
+											printf_s("Некорректный ввод. Стоимость билета должна записываться положительным числом\nВведите снова:");
+											ticketCost = atoi(String_WriteLine());
+										}
+#endif // RU
+										perfomances[variant - 1].ticketCost = ticketCost;
+										SetPerfomancesInFile(PERFOMANCE_FILE, perfomances, perfomanceCount);
+#ifdef EN
+										printf_s("Ticket cost succesfully changed...");
+#endif // EN
+#ifdef RU
+										printf_s("Стоимость билета успешно изменена...");
+#endif // RU
+										system("pause");
+										break;
 									}
-#endif // RU
-									perfomances[variant - 1].ticketCost = ticketCost;
-									SetPerfomancesInFile(PERFOMANCE_FILE, perfomances, perfomanceCount);
-#ifdef EN
-									printf_s("Ticket cost succesfully changed...");
-#endif // EN
-#ifdef RU
-									printf_s("Стоимость билета успешно изменена...");
-#endif // RU
-									system("pause");
-									break;
-								}
-								case 4: //Изменение даты и времени представления
-								{
-									system("cls");
-									ShowPerfomances(perfomances, perfomanceCount);
-
-#ifdef EN
-									printf_s("Choose perfomance for editing: ");
-#endif // EN
-#ifdef RU
-									printf_s("Выберите изменяемое представление: ");
-#endif // RU
-									int variant = atoi(String_WriteLine());
-									while (variant < 1 || variant > perfomanceCount)
+									case 4: //Изменение даты и времени представления
 									{
-#ifdef EN
-										printf_s("Uncorrect choose. Enter again: ");
-#endif // EN
-#ifdef RU
-										printf_s("Некорректный выбор. Введите снова: ");
-#endif // RU
-										variant = atoi(String_WriteLine());
-									}
+										system("cls");
+										ShowPerfomances(perfomances, perfomanceCount);
 
-									DateTime perfTime;
 #ifdef EN
-									printf_s("\nEnter new perfomance date & time\n");
-									perfTime = DateTime_WriteLine(false);
+										printf_s("Choose perfomance for editing: ");
 #endif // EN
 #ifdef RU
-									printf_s("\nВведите новую дату и время представления\n");
-									perfTime = DateTime_WriteLine(false);
+										printf_s("Выберите изменяемое представление: ");
 #endif // RU
-									perfomances[variant - 1].time = perfTime;
-									SetPerfomancesInFile(PERFOMANCE_FILE, perfomances, perfomanceCount);
+										int variant = atoi(String_WriteLine());
+										while (variant < 1 || variant > perfomanceCount)
+										{
 #ifdef EN
-									printf_s("Ticket cost succesfully changed...");
+											printf_s("Uncorrect choose. Enter again: ");
 #endif // EN
 #ifdef RU
-									printf_s("Стоимость билета успешно изменена...");
+											printf_s("Некорректный выбор. Введите снова: ");
 #endif // RU
-									system("pause");
-									break;
+											variant = atoi(String_WriteLine());
+										}
+
+										DateTime perfTime;
+#ifdef EN
+										printf_s("\nEnter new perfomance date & time\n");
+										perfTime = DateTime_WriteLine(false);
+#endif // EN
+#ifdef RU
+										printf_s("\nВведите новую дату и время представления\n");
+										perfTime = DateTime_WriteLine(false);
+#endif // RU
+										perfomances[variant - 1].time = perfTime;
+										SetPerfomancesInFile(PERFOMANCE_FILE, perfomances, perfomanceCount);
+#ifdef EN
+										printf_s("Ticket cost succesfully changed...");
+#endif // EN
+#ifdef RU
+										printf_s("Стоимость билета успешно изменена...");
+#endif // RU
+										system("pause");
+										break;
+									}
+									case 5: //Выход
+									{
+										value = false;
+										break;
+									}
+									}
 								}
-								case 5: //Выход
-								{
-									break;
-								}
-								}
+								value = true;
 								break;
 							}
 							case 3: // Удаление представления
@@ -752,175 +873,399 @@ int main()
 							}
 							case 4: // Сортировка представлений
 							{
-								system("cls");
-								printf_s(SortPerfomanceMenu());
-								switch (CaseVariant_WriteLine(5))
+								while (value)
 								{
-								case 1: // Сортировка по названию
-								{
-									perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 1);
+									system("cls");
+									printf_s(SortPerfomanceMenu());
+									switch (CaseVariant_WriteLine(5))
+									{
+									case 1: // Сортировка по названию
+									{
+										perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 1);
 #ifdef EN
-									printf_s("\n\nSorted...");
+										printf_s("\n\nSorted...\n");
 #endif // EN
 #ifdef RU
-									printf_s("\n\nОтсортировано...");
+										printf_s("\n\nОтсортировано...\n");
 #endif // RU
-									system("pause");
-									break;
-								}
-								case 2: // Сортировка по количеству билетов
-								{
-									perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 2);
+										system("pause");
+										break;
+									}
+									case 2: // Сортировка по количеству билетов
+									{
+										perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 2);
 #ifdef EN
-									printf_s("\n\nSorted...");
+										printf_s("\n\nSorted...\n");
 #endif // EN
 #ifdef RU
-									printf_s("\n\nОтсортировано...");
+										printf_s("\n\nОтсортировано...\n");
 #endif // RU
-									system("pause");
-									break;
-								}
-								case 3: // Сортировка по стоимости билета
-								{
-									perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 3);
+										system("pause");
+										break;
+									}
+									case 3: // Сортировка по стоимости билета
+									{
+										perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 3);
 #ifdef EN
-									printf_s("\n\nSorted...");
+										printf_s("\n\nSorted...\n");
 #endif // EN
 #ifdef RU
-									printf_s("\n\nОтсортировано...");
+										printf_s("\n\nОтсортировано...\n");
 #endif // RU
-									system("pause");
-									break;
-								}
-								case 4: // Сортировка по времени проведения
-								{
-									perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 4);
+										system("pause");
+										break;
+									}
+									case 4: // Сортировка по времени проведения
+									{
+										perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 4);
 #ifdef EN
-									printf_s("\n\nSorted...");
+										printf_s("\n\nSorted...\n");
 #endif // EN
 #ifdef RU
-									printf_s("\n\nОтсортировано...");
+										printf_s("\n\nОтсортировано...\n");
 #endif // RU
-									system("pause");
-									break;
+										system("pause");
+										break;
+									}
+									case 5: // Выход
+									{
+										value = false;
+										break;
+									}
+									}
 								}
-								case 5: // Выход
-								{
-									break;
-								}
-								}
+								value = true;
 								break;
 							}
 							case 5: // Поиск представлений
 							{
-								char* title = NULL;
-								system("cls");
-								printf_s(FindPerfomanceMenu());
-								DateTime perfDate;
-								int ticketCount = 0;
-								int ticketCost = 0;
-								perfDate.day = 0;
-								switch (CaseVariant_WriteLine(5))
+								while (value)
 								{
-								case 1: // Поиск по названию
-								{
+									char* title = NULL;
+									system("cls");
+									printf_s(FindPerfomanceMenu());
+									DateTime perfDate;
+									int ticketCount = 0;
+									int ticketCost = 0;
+									perfDate.day = 0;
+									switch (CaseVariant_WriteLine(5))
+									{
+									case 1: // Поиск по названию
+									{
 #ifdef EN
-									printf_s("\nEnter perfomance title for find: ");
+										printf_s("\nEnter perfomance title for find: ");
 #endif // EN
 #ifdef RU
-									printf_s("\nВведите искомое название представления для поиска: ");
+										printf_s("\nВведите искомое название представления для поиска: ");
 #endif // RU
-									title = String_WriteLine();
-									int findedCount = 0;
-									Perfomance* findedPerfomances = FindPerfomancesByParams(perfomances, perfomanceCount, 1, &findedCount, title, ticketCount, ticketCost, perfDate);
-									ShowPerfomances(findedPerfomances, findedCount);
-									system("pause");
-									break;
-								}
-								case 2: // Поиск по количеству билетов
-								{
+										title = String_WriteLine();
+										int findedCount = 0;
+										Perfomance* findedPerfomances = FindPerfomancesByParams(perfomances, perfomanceCount, 1, &findedCount, title, ticketCount, ticketCost, perfDate);
+										if (findedCount != 0)
+											ShowPerfomances(findedPerfomances, findedCount);
+										else
+										{
 #ifdef EN
-									printf_s("\nEnter perfomance's ticket count for find: ");
-									ticketCount = atoi(String_WriteLine());
-									while (ticketCount < 10)
+											printf_s("\nPerfomance not found...\n");
+#endif // EN
+#ifdef RU
+											printf_s("\nПредставление не найдено...\n");
+#endif // RU
+
+										}
+										system("pause");
+										break;
+									}
+									case 2: // Поиск по количеству билетов
 									{
-										printf_s("Uncorrect type. Ticket count must be number-value and 10 or more.\nEnter again:");
+#ifdef EN
+										printf_s("\nEnter perfomance's ticket count for find: ");
 										ticketCount = atoi(String_WriteLine());
-									}
+										while (ticketCount < 10)
+										{
+											printf_s("Uncorrect type. Ticket count must be number-value and 10 or more.\nEnter again:");
+											ticketCount = atoi(String_WriteLine());
+										}
 #endif // EN
 #ifdef RU
-									printf_s("\nВведите количество билетов представления для поиска: ");
-									ticketCount = atoi(String_WriteLine());
-									while (ticketCount < 10)
-									{
-										printf_s("Некорректный ввод. Количество билетов должно записываться числом и в количестве 10 и более.\nВведите снова:");
+										printf_s("\nВведите количество билетов представления для поиска: ");
 										ticketCount = atoi(String_WriteLine());
-									}
+										while (ticketCount < 10)
+										{
+											printf_s("Некорректный ввод. Количество билетов должно записываться числом и в количестве 10 и более.\nВведите снова:");
+											ticketCount = atoi(String_WriteLine());
+										}
 #endif // RU
-									int findedCount = 0;
-									Perfomance* findedPerfomances = FindPerfomancesByParams(perfomances, perfomanceCount, 2, &findedCount, title, ticketCount, ticketCost, perfDate);
-									ShowPerfomances(findedPerfomances, findedCount);
-									system("pause");
-									break;
-								}
-								case 3: // Поиск по стоимости билетов
-								{
+										int findedCount = 0;
+										Perfomance* findedPerfomances = FindPerfomancesByParams(perfomances, perfomanceCount, 2, &findedCount, title, ticketCount, ticketCost, perfDate);
+										if (findedCount != 0)
+											ShowPerfomances(findedPerfomances, findedCount);
+										else
+										{
 #ifdef EN
-									printf_s("\nEnter perfomance's ticket cost for find: ");
-									ticketCost = atoi(String_WriteLine());
-									while (ticketCost < 0)
-									{
-										printf_s("Uncorrect type. Ticket cost must be number-value and non-negative\nEnter again:");
-										ticketCost = atoi(String_WriteLine());
-									}
+											printf_s("\nPerfomance not found...\n");
 #endif // EN
 #ifdef RU
-									printf_s("\nВведите стоимость билета представления для поиска: ");
-									ticketCost = atoi(String_WriteLine());
-									while (ticketCost < 0)
-									{
-										printf_s("Некорректный ввод. Стоимость билета должна записываться положительным числом\nВведите снова:");
-										ticketCost = atoi(String_WriteLine());
-									}
+											printf_s("\nПредставление не найдено...\n");
 #endif // RU
-									int findedCount = 0;
-									Perfomance* findedPerfomances = FindPerfomancesByParams(perfomances, perfomanceCount, 3, &findedCount, title, ticketCount, ticketCost, perfDate);
-									ShowPerfomances(findedPerfomances, findedCount);
-									system("pause");
-									break;
-								}
-								case 4: // Поиск по дате представления
-								{
+
+										}
+										system("pause");
+										break;
+									}
+									case 3: // Поиск по стоимости билетов
+									{
 #ifdef EN
-									printf_s("\nEnter perfomance date & time for find\n");
-									perfDate = DateTime_WriteLine(false);
+										printf_s("\nEnter perfomance's ticket cost for find: ");
+										ticketCost = atoi(String_WriteLine());
+										while (ticketCost < 0)
+										{
+											printf_s("Uncorrect type. Ticket cost must be number-value and non-negative\nEnter again:");
+											ticketCost = atoi(String_WriteLine());
+										}
 #endif // EN
 #ifdef RU
-									printf_s("\nВведите искомую дату и время представления\n");
-									perfDate = DateTime_WriteLine(false);
+										printf_s("\nВведите стоимость билета представления для поиска: ");
+										ticketCost = atoi(String_WriteLine());
+										while (ticketCost < 0)
+										{
+											printf_s("Некорректный ввод. Стоимость билета должна записываться положительным числом\nВведите снова:");
+											ticketCost = atoi(String_WriteLine());
+										}
 #endif // RU
-									int findedCount = 0;
-									Perfomance* findedPerfomances = FindPerfomancesByParams(perfomances, perfomanceCount, 4, &findedCount, title, ticketCount, ticketCost, perfDate);
-									ShowPerfomances(findedPerfomances, findedCount);
-									system("pause");
-									break;
+										int findedCount = 0;
+										Perfomance* findedPerfomances = FindPerfomancesByParams(perfomances, perfomanceCount, 3, &findedCount, title, ticketCount, ticketCost, perfDate);
+										if (findedCount != 0)
+											ShowPerfomances(findedPerfomances, findedCount);
+										else
+										{
+#ifdef EN
+											printf_s("\nPerfomance not found...\n");
+#endif // EN
+#ifdef RU
+											printf_s("\nПредставление не найдено...\n");
+#endif // RU
+
+										}
+										system("pause");
+										break;
+									}
+									case 4: // Поиск по дате представления
+									{
+#ifdef EN
+										printf_s("\nEnter perfomance date & time for find\n");
+										perfDate = DateTime_WriteLine(false);
+#endif // EN
+#ifdef RU
+										printf_s("\nВведите искомую дату и время представления\n");
+										perfDate = DateTime_WriteLine(false);
+#endif // RU
+										int findedCount = 0;
+										Perfomance* findedPerfomances = FindPerfomancesByParams(perfomances, perfomanceCount, 4, &findedCount, title, ticketCount, ticketCost, perfDate);
+										if (findedCount != 0)
+											ShowPerfomances(findedPerfomances, findedCount);
+										else
+										{
+#ifdef EN
+											printf_s("\nPerfomance not found...\n");
+#endif // EN
+#ifdef RU
+											printf_s("\nПредставление не найдено...\n");
+#endif // RU
+
+										}
+										system("pause");
+										break;
+									}
+									case 5: // Выход
+									{
+										value = false;
+										break;
+									}
+									}
 								}
-								case 5: // Выход
-								{
-									break;
-								}
-								}
-								system("cls");
+								value = true;
 								break;
 							}
-							case 6: // Вывод представлений
+							case 6: // Фильтрация представлений
+							{
+								while (value)
+								{
+									system("cls");
+									printf_s(FilterPerfomanceMenu());
+									switch (CaseVariant_WriteLine(5))
+									{
+									case 1: // Фильтрация по названию
+									{
+#ifdef EN
+										printf_s("\nEnter title for filtering: ");
+#endif // EN
+#ifdef RU
+										printf_s("\nВведите название, по которому будет фильтрация: ");
+#endif // RU
+
+										char* enterValue = String_WriteLine();
+										int countFilters = 0;
+										char** filteringValues = (char**)malloc(sizeof(char) * 100);
+										while (strcmp(enterValue, "exit") != 0)
+										{
+											filteringValues[countFilters] = (char*)malloc(sizeof(char) * strlen(enterValue));
+											filteringValues[countFilters++] = enterValue;
+
+#ifdef EN
+											printf_s("Enter title for filtering (Enter 'exit' for exit): ");
+#endif // EN
+#ifdef RU
+											printf_s("Введите название, по которому будет фильтрация (Введите 'exit' для выхода): ");
+#endif // RU
+											enterValue = String_WriteLine();
+										}
+
+										DateTime date; date.day = -1;
+										int counter = 0;
+
+										Perfomance* foundPerfomances = FilterPerfomancesArray(perfomances, perfomanceCount, filteringValues, countFilters, NULL, NULL, date, date, &counter);
+#ifdef EN
+										counter == 0 ? printf_s("No info found...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // EN
+#ifdef RU
+										counter == 0 ? printf_s("Информация не найдена...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // RU
+
+										value = false;
+										system("pause");
+										break;
+									}
+									case 2: // Фильтрация по количеству билетов
+									{
+										int* ticketCounts = (int*)malloc(sizeof(int) * 2);
+#ifdef EN
+										printf_s("\nEnter low ticket count level: ");
+#endif // EN
+#ifdef RU
+										printf_s("\nВведите наименьшее искомое количество билетов: ");
+#endif // RU
+										int lowTicket = 0;
+										scanf_s("%d", &lowTicket);
+
+#ifdef EN
+										printf_s("Enter high ticket count level: ");
+#endif // EN
+#ifdef RU
+										printf_s("Введите наибольшее искомое количество билетов: ");
+#endif // RU
+										int highTicket = 0;
+										scanf_s("%d", &highTicket);
+
+										ticketCounts[0] = lowTicket;
+										ticketCounts[1] = highTicket;
+
+										DateTime date; date.day = -1;
+										int counter = 0;
+
+										Perfomance* foundPerfomances = FilterPerfomancesArray(perfomances, perfomanceCount, NULL, 0, ticketCounts, NULL, date, date, &counter);
+#ifdef EN
+										counter == 0 ? printf_s("No info found...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // EN
+#ifdef RU
+										counter == 0 ? printf_s("Информация не найдена...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // RU
+
+										value = false;
+										system("pause");
+										break;
+									}
+									case 3: // Фильтрация по стоимости
+									{
+										int* ticketCosts = (int*)malloc(sizeof(int) * 2);
+#ifdef EN
+										printf_s("\nEnter low ticket cost level: ");
+#endif // EN
+#ifdef RU
+										printf_s("\nВведите наименьшую стоимость искомых билетов: ");
+#endif // RU
+										int lowCost = 0;
+										scanf_s("%d", &lowCost);
+
+#ifdef EN
+										printf_s("Enter high ticket cost level: ");
+#endif // EN
+#ifdef RU
+										printf_s("Введите наибольшую стоимость искомых билетов: ");
+#endif // RU
+										int highCost = 0;
+										scanf_s("%d", &highCost);
+
+										ticketCosts[0] = lowCost;
+										ticketCosts[1] = highCost;
+
+										DateTime date; date.day = -1;
+										int counter = 0;
+
+										Perfomance* foundPerfomances = FilterPerfomancesArray(perfomances, perfomanceCount, NULL, 0, NULL, ticketCosts, date, date, &counter);
+#ifdef EN
+										counter == 0 ? printf_s("No info found...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // EN
+#ifdef RU
+										counter == 0 ? printf_s("Информация не найдена...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // RU
+
+										value = false;
+										system("pause");
+										break;
+									}
+									case 4: // Фильтрация по дате проведения
+									{
+										DateTime startDate, endDate;
+
+#ifdef EN
+										printf_s("\nEnter perfomance starting date!\n");
+#endif // EN
+#ifdef RU
+										printf_s("\nВведите начальное время представления!\n");
+#endif // RU
+										startDate = DateTime_WriteLine(true);
+
+#ifdef EN
+										printf_s("\nEnter ending date birth!\n");
+#endif // EN
+#ifdef RU
+										printf_s("\nВведите конечное время представления!\n");
+#endif // RU
+
+										endDate = DateTime_WriteLine(true);
+
+										int counter = 0;
+
+										Perfomance* foundPerfomances = FilterPerfomancesArray(perfomances, perfomanceCount, NULL, 0, NULL, NULL, startDate, endDate, &counter);
+#ifdef EN
+										counter == 0 ? printf_s("No info found...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // EN
+#ifdef RU
+										counter == 0 ? printf_s("Информация не найдена...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // RU
+										value = false;
+										system("pause");
+										break;
+									}
+									case 5:
+									{
+										value = false;
+										break;
+									}
+									}
+								}
+								value = true;
+								break;
+							}
+							case 7: // Вывод представлений
 							{
 								system("cls");
 								ShowPerfomances(perfomances, perfomanceCount);
 								system("pause");
 								break;
 							}
-							case 7: // Выход
+							case 8: // Выход
 							{
 								value = false;
 							}
@@ -1085,108 +1430,209 @@ int main()
 							}
 							case 3: // Изменение представлений артистов
 							{
-								system("cls");
-								ShowArtistPerfomances(artPerfomances, artPerfomancesCount, artists, artistCount, perfomances, perfomanceCount);
-								printf_s("\n");
-#ifdef EN
-								printf_s("Choose what you want to update\n");
-#endif // EN
-#ifdef RU
-								printf_s("Выберите что вы хотите изменить\n");
-#endif // RU
-
-								printf_s(EditArtPerfMenu());
-
-								int value = CaseVariant_WriteLine(5);
-								switch (value)
-								{
-								case 5: // Выход
+								while (value)
 								{
 									system("cls");
-									break;
-								}
-								default: //Изменение информации
-								{
+									ShowArtistPerfomances(artPerfomances, artPerfomancesCount, artists, artistCount, perfomances, perfomanceCount);
+									printf_s("\n");
 #ifdef EN
-									printf_s("\nChoose artist's perfomance for editing: ");
+									printf_s("Choose what you want to update\n");
 #endif // EN
 #ifdef RU
-									printf_s("\nВыберите изменяемое представление артистов: ");
+									printf_s("Выберите что вы хотите изменить\n");
 #endif // RU
-									int variant = atoi(String_WriteLine());
-									while (variant < 1 || variant > artPerfomancesCount)
-									{
-#ifdef EN
-										printf_s("\nUncorrect choose. Enter again: ");
-#endif // EN
-#ifdef RU
-										printf_s("\nНекорректный выбор. Введите снова: ");
-#endif // RU
-										variant = atoi(String_WriteLine());
-									}
 
-									switch (value)
+									printf_s(EditArtPerfMenu());
+
+									int value_int = CaseVariant_WriteLine(5);
+									switch (value_int)
 									{
-									case 1: // Изменение артиста
+									case 5: // Выход
 									{
-										printf_s("\n");
-										ShowArtists(artists, artistCount);
-										int artVariant;
+										value = false;
+										system("cls");
+										break;
+									}
+									default: //Изменение информации
+									{
 #ifdef EN
-										printf_s("\nChoose any artist: ");
-										artVariant = atoi(String_WriteLine());
-										while (artVariant < 1 || artVariant > artistCount)
+										printf_s("\nChoose artist's perfomance for editing: ");
+#endif // EN
+#ifdef RU
+										printf_s("\nВыберите изменяемое представление артистов: ");
+#endif // RU
+										int variant = atoi(String_WriteLine());
+										while (variant < 1 || variant > artPerfomancesCount)
 										{
+#ifdef EN
 											printf_s("\nUncorrect choose. Enter again: ");
-											artVariant = atoi(String_WriteLine());
-										}
 #endif // EN
 #ifdef RU
-										printf_s("Выберите артиста: ");
-										artVariant = atoi(String_WriteLine());
-										while (artVariant < 1 || artVariant > artistCount)
-										{
-											printf_s("Неверный выбор. Введите снова: ");
-											artVariant = atoi(String_WriteLine());
-										}
+											printf_s("\nНекорректный выбор. Введите снова: ");
 #endif // RU
-
-										artPerfomances[variant - 1].artistId = artists[artVariant - 1].id;
-
-										break;
-									}
-									case 2: // Изменение представления
-									{
-										printf_s("\n");
-										ShowPerfomances(perfomances, perfomanceCount);
-										int perfVariant;
-#ifdef EN
-										printf_s("\nChoose any perfomance: ");
-										perfVariant = atoi(String_WriteLine());
-										while (perfVariant< 1 || perfVariant> artistCount)
-										{
-											printf_s("Uncorrect choose. Enter again: ");
-											perfVariant = atoi(String_WriteLine());
+											variant = atoi(String_WriteLine());
 										}
+
+										switch (value_int)
+										{
+										case 1: // Изменение артиста
+										{
+											printf_s("\n");
+											ShowArtists(artists, artistCount);
+											int artVariant;
+#ifdef EN
+											printf_s("\nChoose any artist: ");
+											artVariant = atoi(String_WriteLine());
+											while (artVariant < 1 || artVariant > artistCount)
+											{
+												printf_s("\nUncorrect choose. Enter again: ");
+												artVariant = atoi(String_WriteLine());
+											}
 #endif // EN
 #ifdef RU
-										printf_s("\nВыберите представление: ");
-										perfVariant = atoi(String_WriteLine());
-										while (perfVariant< 1 || perfVariant> artistCount)
-										{
-											printf_s("Неверный выбор. Введите снова: ");
-											perfVariant = atoi(String_WriteLine());
-										}
+											printf_s("Выберите артиста: ");
+											artVariant = atoi(String_WriteLine());
+											while (artVariant < 1 || artVariant > artistCount)
+											{
+												printf_s("Неверный выбор. Введите снова: ");
+												artVariant = atoi(String_WriteLine());
+											}
 #endif // RU
 
-										artPerfomances[variant - 1].perfomanceId = perfomances[perfVariant - 1].id;
+											artPerfomances[variant - 1].artistId = artists[artVariant - 1].id;
+
+											break;
+										}
+										case 2: // Изменение представления
+										{
+											printf_s("\n");
+											ShowPerfomances(perfomances, perfomanceCount);
+											int perfVariant;
+#ifdef EN
+											printf_s("\nChoose any perfomance: ");
+											perfVariant = atoi(String_WriteLine());
+											while (perfVariant< 1 || perfVariant> artistCount)
+											{
+												printf_s("Uncorrect choose. Enter again: ");
+												perfVariant = atoi(String_WriteLine());
+											}
+#endif // EN
+#ifdef RU
+											printf_s("\nВыберите представление: ");
+											perfVariant = atoi(String_WriteLine());
+											while (perfVariant< 1 || perfVariant> artistCount)
+											{
+												printf_s("Неверный выбор. Введите снова: ");
+												perfVariant = atoi(String_WriteLine());
+											}
+#endif // RU
+
+											artPerfomances[variant - 1].perfomanceId = perfomances[perfVariant - 1].id;
+											break;
+										}
+										case 3: // Изменение зарплаты артиста
+										{
+											long salary;
+#ifdef EN
+											printf_s("\nEnter new artist's salary for perfomance: ");
+											salary = atoi(String_WriteLine());
+											while (salary < 0)
+											{
+												printf_s("Salary cannot be negative. Enter value again: ");
+												salary = atoi(String_WriteLine());
+											}
+#endif // EN
+#ifdef RU
+											printf_s("\nВведите зарплату артиста за представление: ");
+											salary = atoi(String_WriteLine());
+											while (salary < 0)
+											{
+												printf_s("Зарплата не может быть отрицательной. Введите значение снова: ");
+												salary = atoi(String_WriteLine());
+											}
+#endif // RU
+
+											artPerfomances[variant - 1].salary = salary;
+											break;
+										}
+										case 4: // Изменение роли артиста
+										{
+											char* role = NULL;
+#ifdef EN
+											printf_s("\nEnter artists role in perfomance: ");
+#endif // EN
+#ifdef RU
+											printf_s("Введите роль артиста в представлении: ");
+#endif // RU
+											role = String_WriteLine();
+											strcpy(artPerfomances[variant - 1].role, role);
+											break;
+										}
+
+										}
+										if (value_int > 0 && value_int < 5)
+										{
+											SetArtPerfInFile(ARTPERF_FILE, artPerfomances, artPerfomancesCount);
+
+#ifdef EN
+											printf_s("Artist's perfomance changed succesfully...\n");
+#endif // EN
+#ifdef RU
+											printf_s("Представление артиста успешно изменено...\n");
+#endif // RU
+											system("pause");
+										}
 										break;
 									}
-									case 3: // Изменение зарплаты артиста
+									}
+								}
+								value = true;
+								break;
+							}
+							case 4: // Поиск представлений артистов
+							{
+								while (value)
+								{
+									system("cls");
+									printf_s(FindArtPerfMenu());
+
+									int value_int = CaseVariant_WriteLine(5);
+									char* name = NULL;
+									char* title = NULL;
+									char* role = NULL;
+									long salary = 0;
+
+									switch (value_int)
 									{
-										long salary;
+									case 1: // Поиск по имени артиста
+									{
+										system("cls");
 #ifdef EN
-										printf_s("\nEnter new artist's salary for perfomance: ");
+										printf_s("Enter artist name for find: ");
+#endif // EN
+#ifdef RU
+										printf_s("Введите имя искомого артиста: ");
+#endif // RU
+										name = String_WriteLine();
+										break;
+									}
+									case 2: // Поиск по представлению
+									{
+										system("cls");
+#ifdef EN
+										printf_s("Enter perfomance title for find: ");
+#endif // EN
+#ifdef RU
+										printf_s("Введите название искомого представления: ");
+#endif // RU
+										title = String_WriteLine();
+										break;
+									}
+									case 3: // Поиск по зарплате артистов
+									{
+										system("cls");
+#ifdef EN
+										printf_s("Enter artist's salary for perfomance for find: ");
 										salary = atoi(String_WriteLine());
 										while (salary < 0)
 										{
@@ -1195,7 +1641,7 @@ int main()
 										}
 #endif // EN
 #ifdef RU
-										printf_s("\nВведите зарплату артиста за представление: ");
+										printf_s("Введите искомую зарплату артиста за представление: ");
 										salary = atoi(String_WriteLine());
 										while (salary < 0)
 										{
@@ -1203,141 +1649,50 @@ int main()
 											salary = atoi(String_WriteLine());
 										}
 #endif // RU
-
-										artPerfomances[variant - 1].salary = salary;
 										break;
 									}
-									case 4: // Изменение роли артиста
+									case 4: // Поиск по роли артиста
 									{
-										char* role = NULL;
+										system("cls");
 #ifdef EN
-										printf_s("\nEnter artists role in perfomance: ");
+										printf_s("Enter artist's role for find: ");
 #endif // EN
 #ifdef RU
-										printf_s("Введите роль артиста в представлении: ");
+										printf_s("Введите искомую роль артиста: ");
 #endif // RU
 										role = String_WriteLine();
-										strcpy(artPerfomances[variant - 1].role, role);
 										break;
 									}
-
-									}
-									if (value > 0 && value < 5)
+									case 5:
 									{
-										SetArtPerfInFile(ARTPERF_FILE, artPerfomances, artPerfomancesCount);
+										value = false;
+										system("cls");
+										break;
+									}
+									}
 
+									if (value_int > 0 && value_int < 5)
+									{
+										int foundCount = 0;
+										ArtPerf* foundArtPerfomances = FindArtPerfByParam(artPerfomances, artPerfomancesCount, artists, artistCount, perfomances, perfomanceCount, name, title, salary, role, value_int, &foundCount);
+										if (foundCount > 0)
+										{
+											ShowArtistPerfomances(foundArtPerfomances, foundCount, artists, artistCount, perfomances, perfomanceCount);
+										}
+										else
+										{
 #ifdef EN
-										printf_s("Artist's perfomance changed succesfully...\n");
+											printf_s("\nNo artist's perfomances found\n");
 #endif // EN
 #ifdef RU
-										printf_s("Представление артиста успешно изменено...\n");
+											printf_s("\nПредставления артистов не найдены\n");
 #endif // RU
+										}
+
 										system("pause");
 									}
-									break;
 								}
-								}
-								break;
-							}
-							case 4: // Поиск представлений артистов
-							{
-								system("cls");
-								printf_s(FindArtPerfMenu());
-
-								int value = CaseVariant_WriteLine(5);
-								char* name = NULL;
-								char* title = NULL;
-								char* role = NULL;
-								long salary = 0;
-
-								switch (value)
-								{
-								case 1: // Поиск по имени артиста
-								{
-									system("cls");
-#ifdef EN
-									printf_s("Enter artist name for find: ");
-#endif // EN
-#ifdef RU
-									printf_s("Введите имя искомого артиста: ");
-#endif // RU
-									name = String_WriteLine();
-									break;
-								}
-								case 2: // Поиск по представлению
-								{
-									system("cls");
-#ifdef EN
-									printf_s("Enter perfomance title for find: ");
-#endif // EN
-#ifdef RU
-									printf_s("Введите название искомого представления: ");
-#endif // RU
-									title = String_WriteLine();
-									break;
-								}
-								case 3: // Поиск по зарплате артистов
-								{
-									system("cls");
-#ifdef EN
-									printf_s("Enter artist's salary for perfomance for find: ");
-									salary = atoi(String_WriteLine());
-									while (salary < 0)
-									{
-										printf_s("Salary cannot be negative. Enter value again: ");
-										salary = atoi(String_WriteLine());
-									}
-#endif // EN
-#ifdef RU
-									printf_s("Введите искомую зарплату артиста за представление: ");
-									salary = atoi(String_WriteLine());
-									while (salary < 0)
-									{
-										printf_s("Зарплата не может быть отрицательной. Введите значение снова: ");
-										salary = atoi(String_WriteLine());
-									}
-#endif // RU
-									break;
-								}
-								case 4: // Поиск по роли артиста
-								{
-									system("cls");
-#ifdef EN
-									printf_s("Enter artist's role for find: ");
-#endif // EN
-#ifdef RU
-									printf_s("Введите искомую роль артиста: ");
-#endif // RU
-									role = String_WriteLine();
-									break;
-								}
-								case 5:
-								{
-									system("cls");
-									break;
-								}
-								}
-
-								if (value > 0 && value < 5)
-								{
-									int foundCount = 0;
-									ArtPerf* foundArtPerfomances = FindArtPerfByParam(artPerfomances, artPerfomancesCount, artists, artistCount, perfomances, perfomanceCount, name, title, salary, role, value, &foundCount);
-									if (foundCount > 0)
-									{
-										ShowArtistPerfomances(foundArtPerfomances, foundCount, artists, artistCount, perfomances, perfomanceCount);
-									}
-									else
-									{
-#ifdef EN
-										printf_s("\nNo artist's perfomances found\n");
-#endif // EN
-#ifdef RU
-										printf_s("\nПредставления артистов не найдены\n");
-#endif // RU
-									}
-
-									system("pause");
-								}
+								value = true;
 								break;
 							}
 							case 5: // Вывод представлений артистов
@@ -1398,13 +1753,27 @@ int main()
 										newPassword = Password_WriteLine(displayString);
 #endif // RU
 										system("cls");
-										AddUserInFile(LOGIN_FILE, SetNewUser(newLogin, newPassword, 2));
+										int result = AddUserInFile(LOGIN_FILE, SetNewUser(newLogin, newPassword, 2));
 
 #ifdef EN
-										printf_s("Simple user successfully added...");
+										if (result == 1)
+										{
+											printf_s("Simple user successfully added...\n");
+										}
+										else
+										{
+											printf_s("User with such login already exist's...\n");
+										}
 #endif // EN
 #ifdef RU
-										printf_s("Обычный пользователь успешно добавлен...");
+										if (result == 1)
+										{
+											printf_s("Обычный пользователь успешно добавлен...\n");
+										}
+										else
+										{
+											printf_s("Пользователь с таким логином уже существует...\n");
+										}
 #endif // RU
 										system("pause");
 										value = false;
@@ -1479,6 +1848,7 @@ int main()
 			}
 			case SimpleUser:
 			{
+				system("cls");
 #ifdef EN
 				printf_s("You logged in as User\n\n");
 #endif // EN
@@ -1496,7 +1866,7 @@ int main()
 				while (value)
 				{
 					printf_s(SimpleUserMainMenu());
-					switch (CaseVariant_WriteLine(6))
+					switch (CaseVariant_WriteLine(9))
 					{
 					case 1: // Вывод представлений
 					{
@@ -1521,167 +1891,452 @@ int main()
 					}
 					case 4: // Поиск представлений артистов
 					{
-						system("cls");
-						printf_s(FindArtPerfMenu());
+						while (value)
+						{
+							system("cls");
+							printf_s(FindArtPerfMenu());
 
-						int value = CaseVariant_WriteLine(5);
-						char* name = NULL;
-						char* title = NULL;
-						char* role = NULL;
-						long salary = 0;
+							int value = CaseVariant_WriteLine(5);
+							char* name = NULL;
+							char* title = NULL;
+							char* role = NULL;
+							long salary = 0;
 
-						switch (value)
-						{
-						case 1: // Поиск по имени артиста
-						{
-							system("cls");
-#ifdef EN
-							printf_s("Enter artist name for find: ");
-#endif // EN
-#ifdef RU
-							printf_s("Введите имя искомого артиста: ");
-#endif // RU
-							name = String_WriteLine();
-							break;
-						}
-						case 2: // Поиск по представлению
-						{
-							system("cls");
-#ifdef EN
-							printf_s("Enter perfomance title for find: ");
-#endif // EN
-#ifdef RU
-							printf_s("Введите название искомого представления: ");
-#endif // RU
-							title = String_WriteLine();
-							break;
-						}
-						case 3: // Поиск по зарплате артистов
-						{
-							system("cls");
-#ifdef EN
-							printf_s("Enter artist's salary for perfomance for find: ");
-							salary = atoi(String_WriteLine());
-							while (salary < 0)
+							switch (value)
 							{
-								printf_s("Salary cannot be negative. Enter value again: ");
+							case 1: // Поиск по имени артиста
+							{
+								system("cls");
+#ifdef EN
+								printf_s("Enter artist name for find: ");
+#endif // EN
+#ifdef RU
+								printf_s("Введите имя искомого артиста: ");
+#endif // RU
+								name = String_WriteLine();
+								break;
+							}
+							case 2: // Поиск по представлению
+							{
+								system("cls");
+#ifdef EN
+								printf_s("Enter perfomance title for find: ");
+#endif // EN
+#ifdef RU
+								printf_s("Введите название искомого представления: ");
+#endif // RU
+								title = String_WriteLine();
+								break;
+							}
+							case 3: // Поиск по зарплате артистов
+							{
+								system("cls");
+#ifdef EN
+								printf_s("Enter artist's salary for perfomance for find: ");
 								salary = atoi(String_WriteLine());
-							}
+								while (salary < 0)
+								{
+									printf_s("Salary cannot be negative. Enter value again: ");
+									salary = atoi(String_WriteLine());
+								}
 #endif // EN
 #ifdef RU
-							printf_s("Введите искомую зарплату артиста за представление: ");
-							salary = atoi(String_WriteLine());
-							while (salary < 0)
-							{
-								printf_s("Зарплата не может быть отрицательной. Введите значение снова: ");
+								printf_s("Введите искомую зарплату артиста за представление: ");
 								salary = atoi(String_WriteLine());
-							}
+								while (salary < 0)
+								{
+									printf_s("Зарплата не может быть отрицательной. Введите значение снова: ");
+									salary = atoi(String_WriteLine());
+								}
 #endif // RU
-							break;
-						}
-						case 4: // Поиск по роли артиста
-						{
-							system("cls");
+								break;
+							}
+							case 4: // Поиск по роли артиста
+							{
+								system("cls");
 #ifdef EN
-							printf_s("Enter artist's role for find: ");
+								printf_s("Enter artist's role for find: ");
 #endif // EN
 #ifdef RU
-							printf_s("Введите искомую роль артиста: ");
+								printf_s("Введите искомую роль артиста: ");
 #endif // RU
-							role = String_WriteLine();
-							break;
-						}
-						case 5:
-						{
-							system("cls");
-							break;
-						}
-						}
-
-						if (value > 0 && value < 5)
-						{
-							int foundCount = 0;
-							ArtPerf* foundArtPerfomances = FindArtPerfByParam(artPerfomances, artPerfomancesCount, artists, artistCount, perfomances, perfomanceCount, name, title, salary, role, value, &foundCount);
-							if (foundCount > 0)
-							{
-								ShowArtistPerfomances(foundArtPerfomances, foundCount, artists, artistCount, perfomances, perfomanceCount);
+								role = String_WriteLine();
+								break;
 							}
-							else
+							case 5:
 							{
+								value = false;
+								system("cls");
+								break;
+							}
+							}
+
+							if (value > 0 && value < 5)
+							{
+								int foundCount = 0;
+								ArtPerf* foundArtPerfomances = FindArtPerfByParam(artPerfomances, artPerfomancesCount, artists, artistCount, perfomances, perfomanceCount, name, title, salary, role, value, &foundCount);
+								if (foundCount > 0)
+								{
+									ShowArtistPerfomances(foundArtPerfomances, foundCount, artists, artistCount, perfomances, perfomanceCount);
+								}
+								else
+								{
 #ifdef EN
-								printf_s("\nNo artist's perfomances found\n");
+									printf_s("\nNo artist's perfomances found\n");
 #endif // EN
 #ifdef RU
-								printf_s("\nПредставления артистов не найдены\n");
+									printf_s("\nПредставления артистов не найдены\n");
 #endif // RU
-							}
+								}
 
-							system("pause");
+								system("pause");
+							}
 						}
+						value = true;
 						break;
 					}
 					case 5: // Сортировка представлений
 					{
-						system("cls");
-						printf_s(SortPerfomanceMenu());
-						switch (CaseVariant_WriteLine(5))
+						while (value)
 						{
-						case 1: // Сортировка по названию
-						{
-							perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 1);
+							system("cls");
+							printf_s(SortPerfomanceMenu());
+							switch (CaseVariant_WriteLine(5))
+							{
+							case 1: // Сортировка по названию
+							{
+								perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 1);
 #ifdef EN
-							printf_s("\n\nSorted...");
+								printf_s("\n\nSorted...\n");
 #endif // EN
 #ifdef RU
-							printf_s("\n\nОтсортировано...");
+								printf_s("\n\nОтсортировано...\n");
 #endif // RU
-							system("pause");
-							break;
-						}
-						case 2: // Сортировка по количеству билетов
-						{
-							perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 2);
+								system("pause");
+								break;
+							}
+							case 2: // Сортировка по количеству билетов
+							{
+								perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 2);
 #ifdef EN
-							printf_s("\n\nSorted...");
+								printf_s("\n\nSorted...\n");
 #endif // EN
 #ifdef RU
-							printf_s("\n\nОтсортировано...");
+								printf_s("\n\nОтсортировано...\n");
 #endif // RU
-							system("pause");
-							break;
-						}
-						case 3: // Сортировка по стоимости билета
-						{
-							perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 3);
+								system("pause");
+								break;
+							}
+							case 3: // Сортировка по стоимости билета
+							{
+								perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 3);
 #ifdef EN
-							printf_s("\n\nSorted...");
+								printf_s("\n\nSorted...\n");
 #endif // EN
 #ifdef RU
-							printf_s("\n\nОтсортировано...");
+								printf_s("\n\nОтсортировано...\n");
 #endif // RU
-							system("pause");
-							break;
-						}
-						case 4: // Сортировка по времени проведения
-						{
-							perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 4);
+								system("pause");
+								break;
+							}
+							case 4: // Сортировка по времени проведения
+							{
+								perfomances = SortPerfomancesArray(perfomances, perfomanceCount, 4);
 #ifdef EN
-							printf_s("\n\nSorted...");
+								printf_s("\n\nSorted...\n");
 #endif // EN
 #ifdef RU
-							printf_s("\n\nОтсортировано...");
+								printf_s("\n\nОтсортировано...\n");
 #endif // RU
-							system("pause");
-							break;
+								system("pause");
+								break;
+							}
+							case 5: // Выход
+							{
+								value = false;
+								break;
+							}
+							}
 						}
-						case 5: // Выход
-						{
-							break;
-						}
-						}
+						value = true;
 						break;
 					}
-					case 6: // Выход
+					case 6: // 5 самых востребованных актеров
+					{
+						system("cls");
+
+						int foundCount = 0;
+						int* demandCount = NULL;
+						Artist* foundArtists = Find5MostDemandedActors(artists, artistCount, artPerfomances, artPerfomancesCount, &foundCount, &demandCount);
+
+						ShowDemandedArtitst(foundArtists, foundCount, demandCount);
+						system("pause");
+						break;
+					}
+					case 7: // Фильтрация представлений
+					{
+						while (value)
+						{
+							system("cls");
+							printf_s(FilterPerfomanceMenu());
+							switch (CaseVariant_WriteLine(5))
+							{
+							case 1: // Фильтрация по названию
+							{
+#ifdef EN
+								printf_s("\nEnter title for filtering: ");
+#endif // EN
+#ifdef RU
+								printf_s("\nВведите название, по которому будет фильтрация: ");
+#endif // RU
+
+								char* enterValue = String_WriteLine();
+								int countFilters = 0;
+								char** filteringValues = (char**)malloc(sizeof(char) * 100);
+								while (strcmp(enterValue, "exit") != 0)
+								{
+									filteringValues[countFilters] = (char*)malloc(sizeof(char) * strlen(enterValue));
+									filteringValues[countFilters++] = enterValue;
+
+#ifdef EN
+									printf_s("Enter title for filtering (Enter 'exit' for exit): ");
+#endif // EN
+#ifdef RU
+									printf_s("Введите название, по которому будет фильтрация (Введите 'exit' для выхода): ");
+#endif // RU
+									enterValue = String_WriteLine();
+								}
+
+								DateTime date; date.day = -1;
+								int counter = 0;
+
+								Perfomance* foundPerfomances = FilterPerfomancesArray(perfomances, perfomanceCount, filteringValues, countFilters, NULL, NULL, date, date, &counter);
+#ifdef EN
+								counter == 0 ? printf_s("No info found...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // EN
+#ifdef RU
+								counter == 0 ? printf_s("Информация не найдена...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // RU
+
+								value = false;
+								system("pause");
+								break;
+							}
+							case 2: // Фильтрация по количеству билетов
+							{
+								int* ticketCounts = (int*)malloc(sizeof(int) * 2);
+#ifdef EN
+								printf_s("\nEnter low ticket count level: ");
+#endif // EN
+#ifdef RU
+								printf_s("\nВведите наименьшее искомое количество билетов: ");
+#endif // RU
+								int lowTicket = 0;
+								scanf_s("%d", &lowTicket);
+
+#ifdef EN
+								printf_s("Enter high ticket count level: ");
+#endif // EN
+#ifdef RU
+								printf_s("Введите наибольшее искомое количество билетов: ");
+#endif // RU
+								int highTicket = 0;
+								scanf_s("%d", &highTicket);
+
+								ticketCounts[0] = lowTicket;
+								ticketCounts[1] = highTicket;
+
+								DateTime date; date.day = -1;
+								int counter = 0;
+
+								Perfomance* foundPerfomances = FilterPerfomancesArray(perfomances, perfomanceCount, NULL, 0, ticketCounts, NULL, date, date, &counter);
+#ifdef EN
+								counter == 0 ? printf_s("No info found...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // EN
+#ifdef RU
+								counter == 0 ? printf_s("Информация не найдена...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // RU
+
+								value = false;
+								system("pause");
+								break;
+							}
+							case 3: // Фильтрация по стоимости
+							{
+								int* ticketCosts = (int*)malloc(sizeof(int) * 2);
+#ifdef EN
+								printf_s("\nEnter low ticket cost level: ");
+#endif // EN
+#ifdef RU
+								printf_s("\nВведите наименьшую стоимость искомых билетов: ");
+#endif // RU
+								int lowCost = 0;
+								scanf_s("%d", &lowCost);
+
+#ifdef EN
+								printf_s("Enter high ticket cost level: ");
+#endif // EN
+#ifdef RU
+								printf_s("Введите наибольшую стоимость искомых билетов: ");
+#endif // RU
+								int highCost = 0;
+								scanf_s("%d", &highCost);
+
+								ticketCosts[0] = lowCost;
+								ticketCosts[1] = highCost;
+
+								DateTime date; date.day = -1;
+								int counter = 0;
+
+								Perfomance* foundPerfomances = FilterPerfomancesArray(perfomances, perfomanceCount, NULL, 0, NULL, ticketCosts, date, date, &counter);
+#ifdef EN
+								counter == 0 ? printf_s("No info found...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // EN
+#ifdef RU
+								counter == 0 ? printf_s("Информация не найдена...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // RU
+
+								value = false;
+								system("pause");
+								break;
+							}
+							case 4: // Фильтрация по дате проведения
+							{
+								DateTime startDate, endDate;
+
+#ifdef EN
+								printf_s("\nEnter perfomance starting date!\n");
+#endif // EN
+#ifdef RU
+								printf_s("\nВведите начальное время представления!\n");
+#endif // RU
+								startDate = DateTime_WriteLine(true);
+
+#ifdef EN
+								printf_s("\nEnter ending date birth!\n");
+#endif // EN
+#ifdef RU
+								printf_s("\nВведите конечное время представления!\n");
+#endif // RU
+
+								endDate = DateTime_WriteLine(true);
+
+								int counter = 0;
+
+								Perfomance* foundPerfomances = FilterPerfomancesArray(perfomances, perfomanceCount, NULL, 0, NULL, NULL, startDate, endDate, &counter);
+#ifdef EN
+								counter == 0 ? printf_s("No info found...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // EN
+#ifdef RU
+								counter == 0 ? printf_s("Информация не найдена...\n") : ShowPerfomances(foundPerfomances, counter);
+#endif // RU
+								value = false;
+								system("pause");
+								break;
+							}
+							case 5:
+							{
+								value = false;
+								break;
+							}
+							}
+						}
+						value = true;
+						break;
+					}
+					case 8: // Фильтрация артистов
+					{
+						while (value)
+						{
+							system("cls");
+							printf_s(FilterArtistMenu());
+
+							switch (CaseVariant_WriteLine(3))
+							{
+							case 1: // Фильтрация по имени
+							{
+#ifdef EN
+								printf_s("\nEnter name for filtering: ");
+#endif // EN
+#ifdef RU
+								printf_s("\nВведите имя, по которому будет фильтрация: ");
+#endif // RU
+
+								char* enterValue = String_WriteLine();
+								int countFilters = 0;
+								char** filteringValues = (char**)malloc(sizeof(char) * 100);
+								while (strcmp(enterValue, "exit") != 0)
+								{
+									filteringValues[countFilters] = (char*)malloc(sizeof(char) * strlen(enterValue));
+									filteringValues[countFilters++] = enterValue;
+
+#ifdef EN
+									printf_s("Enter name for filtering (Enter 'exit' for exit): ");
+#endif // EN
+#ifdef RU
+									printf_s("Введите имя, по которому будет фильтрация (Введите 'exit' для выхода): ");
+#endif // RU
+									enterValue = String_WriteLine();
+								}
+
+								DateTime date; date.day = -1;
+								int counter = 0;
+								Artist* foundArtists = FiterArtistsArray(artists, artistCount, filteringValues, countFilters, date, date, &counter);
+#ifdef EN
+								counter == 0 ? printf_s("No info found...\n") : ShowArtists(foundArtists, counter);
+#endif // EN
+#ifdef RU
+								counter == 0 ? printf_s("Информация не найдена...\n") : ShowArtists(foundArtists, counter);
+#endif // RU
+
+								value = false;
+								system("pause");
+								break;
+							}
+							case 2: // Фильтрация по дате
+							{
+								DateTime startDate, endDate;
+
+#ifdef EN
+								printf_s("\nEnter starting date birth!\n");
+#endif // EN
+#ifdef RU
+								printf_s("\nВведите стартовую дату рождения!\n");
+#endif // RU
+								startDate = DateTime_WriteLine(true);
+
+#ifdef EN
+								printf_s("\nEnter ending date birth!\n");
+#endif // EN
+#ifdef RU
+								printf_s("\nВведите конечную дату рождения!\n");
+#endif // RU
+
+								endDate = DateTime_WriteLine(true);
+
+								int counter = 0;
+								Artist* foundArtists = FiterArtistsArray(artists, artistCount, NULL, 0, startDate, endDate, &counter);
+#ifdef EN
+								counter == 0 ? printf_s("No info found...\n") : ShowArtists(foundArtists, counter);
+#endif // EN
+#ifdef RU
+								counter == 0 ? printf_s("Информация не найдена...\n") : ShowArtists(foundArtists, counter);
+#endif // RU
+								system("pause");
+								value = false;
+								break;
+							}
+							case 3: // Выход
+							{
+								value = false;
+								break;
+							}
+							}
+						}
+						value = true;
+						break;
+					}
+					case 9: // Выход
 					{
 						value = false;
 						break;
@@ -1694,13 +2349,13 @@ int main()
 			}
 			default: // Некорректный ввод данных
 			{
-				system("cls");
 #ifdef EN
 				printf_s("\n\nLogin or password are not correct!\n");
 #endif // EN
 #ifdef RU
-				printf_s("\n\nНеверно введен логин или пароль");
+				printf_s("\n\nНеверно введен логин или пароль\n");
 #endif // RU
+				system("pause");
 				break;
 			}
 			}
@@ -1732,10 +2387,10 @@ char* AdminMainMenu()
 char* SimpleUserMainMenu()
 {
 #ifdef EN
-	return "1 - Show perfomances\n2 - Show artists\n3 - Show artists perfomances\n4 - Find artists perfomances\n5 - Sort perfomances\n6 - Exit to main menu: ";
+	return "1 - Show perfomances\n2 - Show artists\n3 - Show artists perfomances\n4 - Find artists perfomances\n5 - Sort perfomances\n6 - Show 5 most demanded actors\n7 - Filter perfomances\n8 - Filter artists\n9 - Exit to main menu: ";
 #endif // EN
 #ifdef RU
-	return "1 - Показать представления\n2 - Показать артистов\n3 - Показать все представления артистов\n4 - Найти представления артистов\n5 - Сортировать представления\n6 - Выход в главное меню: ";
+	return "1 - Показать представления\n2 - Показать артистов\n3 - Показать все представления артистов\n4 - Найти представления артистов\n5 - Сортировать представления\n6 - Показать 5 самых востребованных актеров\n7 - Фильтрация представлений\n8 - Фильтрация актеров\n9 - Выход в главное меню: ";
 #endif
 }
 #pragma endregion
@@ -1747,10 +2402,10 @@ char* SimpleUserMainMenu()
 char* AdminArtistMenu()
 {
 #ifdef EN
-	return "1 - Add new artist\n2 - Edit artist\n3 - Delete artist\n4 - Sort artists\n5 - Find artist by param\n6 - Show all artits\n7 - Show 5 most demanded actors\n8 - Exit to admin menu: ";
+	return "1 - Add new artist\n2 - Edit artist\n3 - Delete artist\n4 - Sort artists\n5 - Find artist by param\n6 - Filter artists\n7 - Show all artits\n8 - Exit to admin menu: ";
 #endif // EN
 #ifdef RU
-	return "1 - Добавить нового артиста\n2 - Редактировать актера\n3 - Удалить актера\n4 - Сортировать список актеров\n5 - Найти актера по заданному параметру\n6 - Показать всех актеров\n7 - Показать 5 самых востребованных актеров\n8 - Выход в меню администратора: ";
+	return "1 - Добавить нового артиста\n2 - Редактировать актера\n3 - Удалить актера\n4 - Сортировать список актеров\n5 - Найти актера по заданному параметру\n6 - Фильтровать всех актеров\n7 - Показать всех актеров\n8 - Выход в меню администратора: ";
 #endif // RU
 
 }
@@ -1782,7 +2437,17 @@ char* FindArtistMenu()
 	return "1 - Find by name\n2 - Find by birth date\n3 - Cancel: ";
 #endif // EN
 #ifdef RU
-	return "1 - Поиск по имени\n2 - Поиск по дате рождения\n3 - Отменить";
+	return "1 - Поиск по имени\n2 - Поиск по дате рождения\n3 - Отменить: ";
+#endif // RU
+}
+
+char* FilterArtistMenu()
+{
+#ifdef EN
+	return "1 - Filter by name\n2 - Filter by birth date\n3 - Cancel: ";
+#endif // EN
+#ifdef RU
+	return "1 - Фильтрация по имени\n2 - Фильтрация по дате рождения\n3 - Отменить: ";
 #endif // RU
 }
 #pragma endregion
@@ -1793,10 +2458,10 @@ char* FindArtistMenu()
 char* AdminPerfomanceMenu()
 {
 #ifdef EN
-	return "1 - Add new perfomance\n2 - Edit perfomance\n3 - Delete perfomance\n4 - Sort perfomances\n5 - Find perfomance by param\n6 - Show all perfomances\n7 - Exit to admin menu: ";
+	return "1 - Add new perfomance\n2 - Edit perfomance\n3 - Delete perfomance\n4 - Sort perfomances\n5 - Find perfomance by param\n6 - Filter perfomances\n7 - Show all perfomances\n8 - Exit to admin menu: ";
 #endif // EN
 #ifdef RU
-	return "1 - Добавить новое представление\n2 - Редактировать представление\n3 - Удалить представление\n4 - Сортировать список представлений\n5 - Найти представление по заданному параметру\n6 - Показать все представления\n7 - Выход в меню администратора: ";
+	return "1 - Добавить новое представление\n2 - Редактировать представление\n3 - Удалить представление\n4 - Сортировать список представлений\n5 - Найти представление по заданному параметру\n6 - Фильтровать все представления\n7 - Показать все представления\n8 - Выход в меню администратора: ";
 #endif // RU
 
 }
@@ -1829,6 +2494,16 @@ char* FindPerfomanceMenu()
 #endif // EN
 #ifdef RU
 	return "1 - Поиск по названию\n2 - Поиск по количеству билетов\n3 - Поиск по стоимости билета\n4 - Поиск по дате представления\n5 - Отменить";
+#endif // RU
+}
+
+char* FilterPerfomanceMenu()
+{
+#ifdef EN
+	return "1 - Filter by title\n2 - Filter by ticket count\n3 - Filter by ticket cost\n4 - Filter by perfomance date\n5 - Cancel: ";
+#endif // EN
+#ifdef RU
+	return "1 - Фильтрация по названию\n2 - Фильтрация по количеству билетов\n3 - Фильтрация по стоимости билета\n4 - Фильтрация по дате представления\n5 - Отменить";
 #endif // RU
 }
 #pragma endregion
@@ -1903,40 +2578,40 @@ char* AddUserMenu()
 void ShowArtists(Artist* artists, int artistCount)
 {
 #ifdef EN
-	printf_s("   ____________________________________\n");
-	printf_s("  |     Name     |      Birth date     |\n");
-	printf_s("  |______________|_____________________|\n");
+	printf_s("   __________________________________________\n");
+	printf_s("  |        Name        |      Birth date     |\n");
+	printf_s("  |____________________|_____________________|\n");
 	for (int i = 0; i < artistCount; i++)
-		printf_s("%2d|%-14s|%d/%d/%-16d|\n", i + 1, artists[i].name, artists[i].birthDate.month, artists[i].birthDate.day, artists[i].birthDate.year);
-	printf_s("  |______________|_____________________|\n");
+		printf_s("%2d|%-20s|%-21s|\n", i + 1, artists[i].name, DateTimeToString_EN(artists[i].birthDate, true));
+	printf_s("  |____________________|_____________________|\n");
 #endif // EN
 #ifdef RU
-	printf_s("   ____________________________________\n");
-	printf_s("  |      ФИО     |    Дата  рождения   |\n");
-	printf_s("  |______________|_____________________|\n");
+	printf_s("   __________________________________________\n");
+	printf_s("  |         ФИО        |    Дата  рождения   |\n");
+	printf_s("  |____________________|_____________________|\n");
 	for (int i = 0; i < artistCount; i++)
-		printf_s("%2d|%-14s|%d.%d.%-16d|\n", i + 1, artists[i].name, artists[i].birthDate.day, artists[i].birthDate.month, artists[i].birthDate.year);
-	printf_s("  |______________|_____________________|\n");
+		printf_s("%2d|%-20s|%-21s|\n", i + 1, artists[i].name, DateTimeToString_RU(artists[i].birthDate, true));
+	printf_s("  |____________________|_____________________|\n");
 #endif // RU
 }
 
 void ShowDemandedArtitst(Artist* artists, int artistCount, int* demandCount)
 {
 #ifdef EN
-	printf_s("   _____________________________________________________\n");
-	printf_s("  |     Name     |  Demand count  |      Birth date     |\n");
-	printf_s("  |______________|________________|_____________________|\n");
+	printf_s("   ___________________________________________________________\n");
+	printf_s("  |        Name        |  Demand count  |      Birth date     |\n");
+	printf_s("  |____________________|________________|_____________________|\n");
 	for (int i = 0; i < artistCount; i++)
-		printf_s("%2d|%-14s|%-16d|%d/%d/%-16d|\n", i + 1, artists[i].name, demandCount[i], artists[i].birthDate.month, artists[i].birthDate.day, artists[i].birthDate.year);
-	printf_s("  |______________|________________|_____________________|\n");
+		printf_s("%2d|%-20s|%-16d|%-21s|\n", i + 1, artists[i].name, demandCount[i], DateTimeToString_EN(artists[i].birthDate, true));
+	printf_s("  |____________________|________________|_____________________|\n");
 #endif // EN
 #ifdef RU
-	printf_s("   _____________________________________________________\n");
-	printf_s("  |      ФИО     | Кол-во участий |    Дата рождения    |\n");
-	printf_s("  |______________|________________|_____________________|\n");
+	printf_s("   ___________________________________________________________\n");
+	printf_s("  |         ФИО        | Кол-во участий |    Дата рождения    |\n");
+	printf_s("  |____________________|________________|_____________________|\n");
 	for (int i = 0; i < artistCount; i++)
-		printf_s("%2d|%-14s|%-16d|%d.%d.%-16d|\n", i + 1, artists[i].name, demandCount[i], artists[i].birthDate.day, artists[i].birthDate.month, artists[i].birthDate.year);
-	printf_s("  |______________|________________|_____________________|\n");
+		printf_s("%2d|%-20s|%-16d|%-21s|\n", i + 1, artists[i].name, demandCount[i], DateTimeToString_RU(artists[i].birthDate, true));
+	printf_s("  |____________________|________________|_____________________|\n");
 #endif // RU
 }
 
@@ -1947,12 +2622,7 @@ void ShowPerfomances(Perfomance* perfomances, int perfomanceCount)
 	printf_s("  |       Title       |    Count    |     Cost     |     Date & Time     |\n");
 	printf_s("  |___________________|_____________|______________|_____________________|\n");
 	for (int i = 0; i < perfomanceCount; i++)
-	{
-		if (perfomances[i].time.hours < 12 || perfomances[i].time.hours == 24)
-			printf_s("%2d|%-19s|%-13d|$%-13d|%d/%d/%d %d:%-7dpm|\n", i + 1, perfomances[i].title, perfomances[i].ticketCount, perfomances[i].ticketCount, perfomances[i].time.month, perfomances[i].time.day, perfomances[i].time.year, perfomances[i].time.hours, perfomances[i].time.minutes);
-		else
-			printf_s("%2d|%-19s|%-13d|$%-13d|%d/%d/%d %d:%-7dam|\n", i + 1, perfomances[i].title, perfomances[i].ticketCount, perfomances[i].ticketCount, perfomances[i].time.month, perfomances[i].time.day, perfomances[i].time.year, perfomances[i].time.hours - 12, perfomances[i].time.minutes);
-	}
+		printf_s("%2d|%-19s|%-13d|$%-13d|%-21s|\n", i + 1, perfomances[i].title, perfomances[i].ticketCount, perfomances[i].ticketCost, DateTimeToString_EN(perfomances[i].time, false));
 	printf_s("  |___________________|_____________|______________|_____________________|\n");
 #endif // EN
 #ifdef RU
@@ -1960,7 +2630,7 @@ void ShowPerfomances(Perfomance* perfomances, int perfomanceCount)
 	printf_s("  |      Название     | Количество  |  Стоимость   |     Дата и время    |\n");
 	printf_s("  |___________________|_____________|______________|_____________________|\n");
 	for (int i = 0; i < perfomanceCount; i++)
-		printf_s("%2d|%-19s|%-13d|%-13d$|%d.%d.%d %d:%-7d|\n", i + 1, perfomances[i].title, perfomances[i].ticketCount, perfomances[i].ticketCount, perfomances[i].time.day, perfomances[i].time.month, perfomances[i].time.year, perfomances[i].time.hours, perfomances[i].time.minutes);
+		printf_s("%2d|%-19s|%-13d|$%-13d|%-21s|\n", i + 1, perfomances[i].title, perfomances[i].ticketCount, perfomances[i].ticketCost, DateTimeToString_RU(perfomances[i].time, false));
 
 	printf_s("  |___________________|_____________|______________|_____________________|\n");
 #endif // RU
@@ -2013,7 +2683,7 @@ void ShowArtistPerfomances(ArtPerf* artPerfs, int artPerfCount, Artist* artists,
 
 char* String_WriteLine()
 {
-	char* str = (char*)malloc(100);
+	char* str = (char*)malloc(100 * sizeof(char));
 
 	gets_s(str, 100);
 	if (strlen(str) == 0)
@@ -2190,7 +2860,7 @@ DateTime DateTime_WriteLine(bool isArtist)
 
 
 	int minute = InitMinutes(atoi(String_WriteLine()));
-	while (minute != -1)
+	while (minute == -1)
 	{
 #ifdef EN
 		printf_s("Uncorrect minutes. Type again: ");

@@ -1,46 +1,46 @@
 #pragma once
 struct DateTime
 {
-	int year;
-	int month;
-	int day;
-	int hours;
-	int minutes;
+	int year;	// год
+	int month;	// месяц
+	int day;	// день
+	int hours;	// час
+	int minutes;// минуты
 };
 
 struct Login
 {
-	char* login;
-	unsigned long password;
-	unsigned long hashSalt;
+	char* login;				// Логин
+	unsigned long password;		// Пароль
+	unsigned long hashSalt;		// Хэш
 };
 
 struct User
 {
-	int permission;
-	struct Login login;
+	int permission;		// Право доступа
+	struct Login login;	// Структурная переменная логина
 };
 
 struct Artist
 {
-	int id;
-	char* name;
-	struct DateTime birthDate;
+	int id;		// Уникальный ключ
+	char* name;	// Имя
+	struct DateTime birthDate; // Структурная переменная Даты
 };
 
 struct Perfomance
 {
-	int id;
-	char* title;
-	int ticketCount;
-	long ticketCost;
-	struct DateTime time;
+	int id;		// Уникальный ключ
+	char* title;	// Название представления
+	int ticketCount;// Количество билетов
+	long ticketCost;// Стоимость билетов
+	struct DateTime time; // Время проведения представления
 };
 
 struct ArtistPerfomances
 {
-	int artistId;
-	int perfomanceId;
-	char* role;
-	long salary;
+	int artistId;		// Уникальный ключ артиста
+	int perfomanceId;	// Уникальный ключ представления
+	char* role;			// Роль участника представления
+	long salary;		// Зарплата
 };
